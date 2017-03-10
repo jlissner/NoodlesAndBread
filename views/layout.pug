@@ -1,0 +1,28 @@
+html
+	include shared/head.pug
+	block head
+
+	body#Site
+		block header
+			div(robot-home="header")
+				include shared/header.pug
+		main
+			include shared/flash.pug
+
+			block content
+
+		block footer
+			div(robot-home="footer")
+				include shared/footer.pug
+
+		if robots
+			script.
+				void function initRobots($){
+					const $site = $('#Site');
+					const robots = !{JSON.stringify(robots)};
+
+					$site.on('homesRegistered', () => {
+						$site.trigger('loadRobots', [robots])
+					});
+				}(jQuery.noConflict());
+				

@@ -1,0 +1,137 @@
+[data-function*='interiorNav'] {
+	margin: 0;
+	z-index: 2;
+	white-space: nowrap;
+	position: relative;
+	transition: left .17s ease-out;
+	display: inline-block;
+
+	> [role='tab']{
+		background: white;
+		padding: @gw-Sm;
+		display: inline-block;
+		border-right: 1px solid @grey;
+		border-bottom: 1px solid @grey-dark;
+		max-width: 200px;
+		position: relative;
+
+		&.active {
+			background: @brand-info;
+		}
+	}
+		h3{
+			font-weight: inherit;
+			margin: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: 100%
+		}
+
+	a{
+		color: @grey-darker;
+		display: block;
+		font-weight: normal;
+		padding: @gw-Xs @gw-Sm;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+		.active{
+			color: white;
+		}
+
+	[role='tabpanel']{
+		background: @grey-lighter;
+		padding: 0;
+		list-style: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		transition: left .17s ease-out;
+
+		a {
+			display: block;
+			width: 100%;
+		}
+			.active{
+				background: @brand-info;
+			}
+	}
+		li {
+			display: inline-block;
+			max-width: 150px;
+			border-right: 1px solid @grey;
+		}
+}
+
+@media(min-width: @screen-sm) {
+	[data-function*='interiorNav'] {
+		white-space: inherit;
+		position: static;
+
+		> [role='tab']{
+			background: none;
+			display: block;
+			padding: 0 0 0 @gw;
+			border: none;
+			max-width: none;
+
+			&.active {
+				background: none;
+				padding-left: @gw - 3px;
+			}
+
+			&:hover{
+				padding-left: @gw - 3px;
+			}
+		}
+			h3{
+				margin: @gw-Sm 0 @gw-Xs;
+				font-weight: normal;
+			}
+
+		a{
+			color: @grey-dark;
+			display: block;
+			font-weight: normal;
+			padding: 0 0 0 @gw-Sm;
+
+			&:hover{
+				border-left: 3px solid @brand-info;
+				padding-left: @gw-Sm - 3px;
+			}
+
+			&:focus {
+				outline: none;
+			}
+		}
+			.active{
+				color: @brand-info;
+				border-left: 3px solid @brand-info;
+				padding-left: @gw-Sm - 3px;
+			}
+
+		[role='tabpanel']{
+			background: none;
+			margin: 0 0 0 @gw-Lg;
+			padding: 0;
+			list-style: none;
+			position: static;
+
+			a {
+				&:hover{
+					border-bottom: none;
+					margin-bottom: 0;
+				}
+
+				&.active {
+					background: none;
+				}
+			}
+		}
+			li {
+				display: block;
+				border: none;
+				max-width: none;
+			}
+	}
+}

@@ -1,0 +1,14 @@
+/node_modules
+
+# Elastic Beanstalk Files
+
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+*.map
+npm-debug.log
+yarn.lock
+public/3rdParty/codemirror/mode/**
+!public/3rdParty/codemirror/mode/pug
+!public/3rdParty/codemirror/mode/pug/pug.js

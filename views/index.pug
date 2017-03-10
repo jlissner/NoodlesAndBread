@@ -1,0 +1,58 @@
+extends layout.pug
+
+block content
+	.container
+		h1 Hello World!
+
+		.form-group
+			textarea.form-control#testwrite
+			button.btn.btn-primary(type='button') test
+
+		#testload
+
+	script.
+		void function init($) {
+			$('button').on('click', (e) => {
+				e.preventDefault();
+
+				const file = { name: 'test', text: $('#testwrite').val()}
+
+				$.ajax({
+					type: 'POST',
+					url: '/writeControl',
+					data: JSON.stringify(file),
+					contentType: 'application/json',
+					success: (e) => {
+						alert(e, 'success')
+					},
+					error: (err) => {
+						console.log(err)
+					}
+				})
+			})
+
+			$(() => {
+				$.ajax({
+					url: '/renderPug',
+					data: {file: 'test.pug'},
+					success: (data) => {
+						$('#testload').html(data)
+					},
+					error: (err) => {
+						console.error(err)
+					}
+
+				});
+
+				$.ajax({
+					url: '/readPug',
+					data: {file: 'test.pug'},
+					success: (data) => {
+						$('#testwrite').val(data);
+					},
+					error: (err) => {
+						console.error(err);
+					}
+				})
+			})
+		}(jQuery.noConflict())

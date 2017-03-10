@@ -1,0 +1,188 @@
+extends layout.pug
+
+block content
+	- var id = uuid();
+
+	.container
+		h1 Create a Robot Factory
+		p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
+
+		.row
+			.col-xs-12.col-sm-6.col-md-4
+				.form-group
+					label These Robots will be a type of:
+						input.form-control.js-factory-name-input(type='text', placeholder='Bending Unit', factory-id= id)
+
+		.panel.panel-primary
+			.panel-heading <span class='js-factory-name'>--------</span>
+
+			table.table
+				thead
+					tr
+						th Attribute
+						th
+						th Type
+						th
+						th
+						th
+				tbody.js-attributes
+					tr.js-attribute
+						td
+							input.form-control.js-attribute-name(type='text', placeholder='Favorite Alcohol')
+						td
+							//button.btn.btn-default 
+							.checkbox
+								label
+									input.js-attribute-is-list(type='checkbox')
+									| Is List of
+						td
+							select.form-control.js-attribute-type
+								option(value='String') Text
+								option Number
+								option List
+								option(value='Bool') Boolean (true/false)
+								option Image
+								option(value='Robot') Another Robot
+						td
+						td
+							select.js-robot.form-control(disabled)
+								option(value= id) Sibling Robots!
+						td(style='padding-top: 12px')
+							button.btn.btn-danger.js-delete &times;
+			.panel-footer.text-right
+				button#AddAttribute.btn.btn-primary Add Some Robot Knowledge
+
+		.text-right
+			button#SaveFactory.btn.btn-primary Save
+
+
+	script.
+		void function initFactory($, duck){
+			const RobotFactories = duck('RobotFactories');
+			const $attributes = $('.js-attributes');
+			const $addAttribute = $('#AddAttribute');
+			const $newAttribute = $('.js-attribute').first().clone();
+			const $factoryNameInput = $('.js-factory-name-input');
+			const $save = $('#SaveFactory');
+
+			$factoryNameInput.on('input', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+				
+				const $parent = $factoryNameInput.parent()
+				if($parent.hasClass('has-error') && $factoryNameInput.val()) {
+					$parent.removeClass('has-error');
+				}
+
+				const $factoryName = $('.js-factory-name');
+				$factoryName.text($factoryNameInput.val() || '--------');
+			});
+
+			$attributes.on('input', '.js-attribute-name', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+
+				const $name = $(e.currentTarget);
+				const $parent = $name.parent();
+
+				if($parent.hasClass('has-error') && $name.val()) {
+					$parent.removeClass('has-error');
+				}
+			});
+
+			$attributes.on('input', '.js-attribute-type', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+
+				const $type = $(e.currentTarget);
+				const $attribute = $type.closest('.js-attribute');
+				const $robot = $attribute.find('.js-robot');
+				const val = $type.val();
+
+				if(val === 'Robot') {
+					$robot.prop('disabled', false);
+					return;
+				}
+				$robot.prop('disabled', true)
+			});
+
+			$attributes.on('input', '.js-list select', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+
+				const $list = $(e.currentTarget);
+				const $attribute = $list.closest('.js-attribute');
+				const $robot = $attribute.find('.js-robot');
+				const val = $list.val();
+
+				if(val === 'Robot') {
+					$robot.prop('disabled', false);
+					return;
+				}
+
+				$robot.prop('disabled', true)
+			});
+
+			$attributes.on('click', '.js-delete', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+
+				$(e.currentTarget).closest('.js-attribute').remove();
+			});
+
+			$addAttribute.on('click', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+
+				$attributes.append($newAttribute.clone());
+				$attributes.last().find('.js-attribute-name').focus();
+			});
+
+			$save.on('click', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+
+				if(!$factoryNameInput.val()) {
+					$factoryNameInput.parent().addClass('has-error');
+				}
+
+				$save.prop('disabled', true);
+
+				const attributes = [];
+				let errors = 0;
+
+				$attributes.find('.js-attribute').each((index, attribute) => {
+					const $attribute = $(attribute);
+					const $name = $attribute.find('.js-attribute-name');
+					const name = $name.val();
+					const isList = $attribute.find('.js-attribute-is-list').prop('checked');;
+					const type = $attribute.find('.js-attribute-type').val();
+					const otherRobot = $attribute.find('.js-robot').val();
+
+					if (!name || attributes.filter((a) => a.name === name).length) {
+						$name.parent().addClass('has-error');
+						errors++;
+						return;
+					}
+
+					const newAttribtue = {
+						name,
+						type: isList ? [type] : type,
+						id: otherRobot, // even if the type isn't "Robot", still include this as it doesn't hurt.
+					}
+
+					attributes.push(newAttribtue);
+				});
+
+				$save.prop('disabled', false);
+
+				if(!errors) {
+					const newFactory = {
+						name: $factoryNameInput.val(),
+						schema: attributes
+					}
+
+					RobotFactories.add(newFactory, (x) => {console.log('success', x)}, (err) => {console.error(err)});
+				}
+			});
+		}(jQuery.noConflict(), duck);

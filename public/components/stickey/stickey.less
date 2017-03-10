@@ -1,0 +1,18 @@
+[data-function*='stickey']{
+	position: relative;
+	width: 100%;
+	z-index: 1;
+
+	[data-stickey='content'] {
+		overflow: hidden;
+	}
+
+	&.stickey [data-stickey='content'] {
+		position: fixed;
+		top: 0 !important;
+	}
+
+	&.stuck [data-stickey='content'] {
+		position: absolute;
+	}
+}

@@ -1,0 +1,44 @@
+[data-function='banner'] {
+	position: relative;
+	overflow: hidden;
+}
+	[data-banner='item'] {
+		background: white;
+		top: 0;
+		position: absolute;
+		transition-property: left;
+		transition-timing-function: ease-in-out;
+		width: 100%;
+		bottom: 0;
+
+		&.active {
+			left: 0;
+			position: relative;
+			z-index: 1;
+		}
+
+		&.before {
+			left: 100%;
+			z-index: 0;
+		}
+
+		&.after {
+			left: -100%;
+			z-index: 0;
+		}
+
+		&.in-transition {
+			z-index: 1;
+		}
+	}
+
+	[data-banner='forward'],
+	[data-banner='back'] {
+		z-index: 2;
+	}
+
+@media(min-width: @screen-sm) {
+}
+
+@media(min-width: @screen-md) {
+}

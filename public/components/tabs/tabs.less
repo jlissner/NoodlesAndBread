@@ -1,0 +1,15 @@
+[data-function='tabs']{
+
+	> [role='tabpanel'] {
+		opacity: 0;
+		transition: opacity .5s;
+
+		&[aria-hidden='true']{
+			display: none;
+		}
+
+		&[aria-hidden='false']{
+			opacity: 1;
+		}
+	}
+}

@@ -1,0 +1,13 @@
+- if(flash && (flash.success || flash.error))
+	.flash-message-container.p-A.t-Md.r-Md
+		- if(flash && flash.success && flash.success.length > 0)
+			p.alert.alert-success= flash.success
+
+		- if(flash && flash.error && flash.error.length > 0)
+			p.alert.alert-danger= flash.error
+
+		- if(flash && flash.info && flash.info.length > 0)
+			p.alert.alert-info= flash.info
+
+		- if(flash && flash.warning && flash.warning.length > 0)
+			p.alert.alert-warning= flash.warning

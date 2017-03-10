@@ -1,0 +1,45 @@
+head
+	title= title || 'Noodles & Bread'
+	meta(charset='utf-8')
+	meta(http-equiv='X-UA-Compatible', content='IE=edge')
+	meta(name='description', content= description || 'The Lissner Listner is built to record the past, present, and future.')
+	meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
+	meta(name='author', content='Joe Lissner')
+
+	//// Styles & Fonts ///////////////////////////////////////////////////////
+
+	// hosted local
+	link(rel='stylesheet', href='/styles/font-awesome/css/font-awesome.min.css', type='text/css')
+	link(rel='stylesheet', href='/styles/styles.css', type='text/css')
+
+	//// Scripts //////////////////////////////////////////////////////////////
+	// not hosted local
+	script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+	script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+	script(type='text/javascript', src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
+	script(type='text/javascript', src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
+
+	// hosted local
+	script(type='text/javascript', src='/components/duck/duck.min.js')
+	script(type='text/javascript', src='/components/accordion/accordion.min.js')
+	script(type='text/javascript', src='/components/banner/banner.min.js')
+	script(type='text/javascript', src='/components/copy/copy.min.js')
+	script(type='text/javascript', src='/components/fileManager/fileManager.min.js')
+	script(type='text/javascript', src='/components/filter/filter.min.js')
+	script(type='text/javascript', src='/components/icon/icon.min.js')
+	script(type='text/javascript', src='/components/interiorNav/interiorNav.min.js')
+	script(type='text/javascript', src='/components/scroll/scroll.min.js')
+	script(type='text/javascript', src='/components/stickey/stickey.min.js')
+	script(type='text/javascript', src='/components/sortable/sortable.min.js')
+	script(type='text/javascript', src='/components/stopProp/stopProp.min.js')
+	script(type='text/javascript', src='/components/tabs/tabs.min.js')
+	script(type='text/javascript', src='/components/toggle/toggle.min.js')
+	if (user && user.isAdmin)
+		script(type='text/javascript', src='/components/duck/filepicker/filepicker.min.js')
+		script(type='text/javascript', src='/components/duck/form/form.min.js')
+	script(type='text/javascript', src='/js/scripts.js')
+	
+
+	// include summernote css/js
+	link(href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css", rel="stylesheet")
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js")

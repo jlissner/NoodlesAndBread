@@ -1,0 +1,23 @@
+.no-js{
+	[role="tabpanel"]{
+		display: block !important;
+	}
+}
+
+[data-function='accordion']{
+	> [role='tab'] {
+		cursor: pointer;
+		margin: 0;
+		padding: @gw-Sm;
+
+		.fa{
+			transition: all .27s ease-out;
+			margin-right: @gw-Sm;
+		}
+	}
+
+	> [role='tabpanel'] {
+		padding: 0 @gw-Sm @gw-Sm;
+
+	}
+}
