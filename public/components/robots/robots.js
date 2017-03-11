@@ -6,13 +6,8 @@ void function initRobots($, duck){
 	// Factory
 		const RobotFactories = duck('RobotFactories');
 
-		function validateFactoryName(e, _$factoryName) {
-			if (e) {
-				e.stopPropagation();
-				e.preventDefault();
-			}
-
-			const $factoryName = _$factoryName || $(e.currentTarget);
+		function validateFactoryName(e) {
+			const $factoryName = e.data.factoryName;
 			const name = $factoryName.val();
 
 			RobotFactories.get(null, (factories) => {
@@ -27,14 +22,123 @@ void function initRobots($, duck){
 			});
 		}
 
+		function validateFactoryAttributeName(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			const $name = $(e.currentTarget);
+			const $parent = $name.parent();
+
+			if($parent.hasClass('has-error') && $name.val()) {
+				$parent.removeClass('has-error');
+			}
+		}
+
+		function checkFactoryAttributeType(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			const $type = $(e.currentTarget);
+			const $attribute = $type.closest('[robot-factory="attribute"]');
+			const $robot = $attribute.find('[robot-factory="attribute-robot"]');
+			const val = $type.val();
+
+			if(val === 'Robot') {
+				$robot.prop('disabled', false);
+				return;
+			}
+			$robot.prop('disabled', true);
+		}
+
+		function deleteFactoryAttribute(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			$(e.currentTarget).closest('[robot-factory="attribute"]').remove();
+		}
+
+		function addFactoryAttribute(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			const $factoryAttributes = e.data.factoryAttributes;
+			const $newFactoryAttribute = e.data.newFactoryAttribute;
+
+			$factoryAttributes.append($newFactoryAttribute.clone());
+			$factoryAttributes.last().find('[robot-factory="attribute-name"]').focus();
+		}
+
+		function buildFactory(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
+			const $factory = e.data.factory
+			const $factoryAttributes = e.data.factoryAttributes;
+			const attributes = [];
+			let errors = 0;
+
+			$factoryAttributes.find('[robot-factory="attribute"]').each((index, attribute) => {
+				const $attribute = $(attribute);
+				const $name = $attribute.find('[robot-factory="attribute-name"]');
+				const name = $name.val();
+				const isList = $attribute.find('[robot-factory="attribute-is-list"]').prop('checked');
+				const type = $attribute.find('[robot-factory="attribute-type"]').val();
+				const otherRobot = $attribute.find('[robot-factory="attribute-robot"]').val();
+
+				if (!name || attributes.filter((a) => a.name === name).length) {
+					$name.parent().addClass('has-error');
+					errors++;
+					$factory.prop('builtFactory', false).trigger('factoryBuilt');
+					return;
+				}
+
+				const newAttribtue = {
+					name,
+					type: isList ? [type] : type,
+					id: otherRobot, // even if the type isn't "Robot", still include this as it doesn't hurt.
+				}
+
+				attributes.push(newAttribtue);
+			});
+
+			$factory.prop('builtFactory', attributes).trigger('factoryBuilt');
+		}
+
+		function saveFactory(e) {
+			console.log('triggered');
+			e.stopPropagation();
+			e.preventDefault();
+
+			const $factory = e.data.factory;
+			const $factoryName = e.data.factoryName;
+			const $saveFactory = e.data.saveFactory;
+			
+			$saveFactory.prop('disabled', true).trigger('buildFactory');
+
+			const attributes = $factory.prop('builtFactory');
+
+			if(attributes) {
+				const newFactory = {
+					name: $factoryName.val(),
+					schema: attributes,
+				}
+
+				RobotFactories.add(newFactory, $.noop, (err) => {console.error(err)});
+			}
+
+			$saveFactory.prop('disabled', false);
+		}
+
 		function initFactory(factory) {
 			const $factory = $(factory);
 			const $factoryName = $factory.find('[robot-factory="name"]');
 			const $factoryAttributes = $factory.find('[robot-factory="attributes"]');
-			//const $newfactoryAttribute = $factoryAttributes.find('[robot-factory="attribute"]').clone();
+			const $addFactoryAttribute = $factory.find('[robot-factory="attribute-add"]');
+			const $newFactoryAttribute = $factoryAttributes.find('[robot-factory="attribute"]').clone();
 			const $saveFactory = $factory.find('[robot-factory="save"]');
 
-			$factoryName.on('input', validateFactoryName);
+			$factoryName.on('input', {factoryName: $factoryName}, validateFactoryName);
+			$factory.on('buildFactory', {factory: $factory, factoryAttributes: $factoryAttributes}, buildFactory);
 			$factory.on('validateFactoryName', (e, isValid) => {
 				e.stopPropagation();
 
@@ -50,136 +154,17 @@ void function initRobots($, duck){
 				}
 			});
 
-			$factoryAttributes.on('input', '[robot-factory="attribute-name"]', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
+			$factoryAttributes.on('input', '[robot-factory="attribute-name"]', validateFactoryAttributeName);
+			$factoryAttributes.on('input', '[robot-factory="attribute-type"]', checkFactoryAttributeType);
+			$factoryAttributes.on('click', '[robot-factory="attribute-delete"]', deleteFactoryAttribute);
 
-				const $name = $(e.currentTarget);
-				const $parent = $name.parent();
+			$addFactoryAttribute.on('click', {factoryAttributes: $factoryAttributes, newFactoryAttribute: $newFactoryAttribute}, addFactoryAttribute);
 
-				if($parent.hasClass('has-error') && $name.val()) {
-					$parent.removeClass('has-error');
-				}
-			});
+			$saveFactory.on('click', {factory: $factory, factoryName: $factoryName, saveFactory: $saveFactory}, saveFactory);
 		}
 
 		$(() => {
 			initFactory("[robot-factory='factory']");
-			/*const $attributes = $('.js-attributes');
-			const $addAttribute = $('#AddAttribute');
-			const $newAttribute = $('.js-attribute').first().clone();
-			
-			const $save = $('#SaveFactory');
-			
-
-
-			$attributes.on('input', '.js-attribute-name', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
-
-				const $name = $(e.currentTarget);
-				const $parent = $name.parent();
-
-				if($parent.hasClass('has-error') && $name.val()) {
-					$parent.removeClass('has-error');
-				}
-			});
-
-			$attributes.on('input', '.js-attribute-type', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
-
-				const $type = $(e.currentTarget);
-				const $attribute = $type.closest('.js-attribute');
-				const $robot = $attribute.find('.js-robot');
-				const val = $type.val();
-
-				if(val === 'Robot') {
-					$robot.prop('disabled', false);
-					return;
-				}
-				$robot.prop('disabled', true)
-			});
-
-			$attributes.on('input', '.js-list select', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
-
-				const $list = $(e.currentTarget);
-				const $attribute = $list.closest('.js-attribute');
-				const $robot = $attribute.find('.js-robot');
-				const val = $list.val();
-
-				if(val === 'Robot') {
-					$robot.prop('disabled', false);
-					return;
-				}
-
-				$robot.prop('disabled', true)
-			});
-
-			$attributes.on('click', '.js-delete', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
-
-				$(e.currentTarget).closest('.js-attribute').remove();
-			});
-
-			$addAttribute.on('click', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
-
-				$attributes.append($newAttribute.clone());
-				$attributes.last().find('.js-attribute-name').focus();
-			});
-
-			$save.on('click', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
-
-				if(!$factoryNameInput.val()) {
-					$factoryNameInput.parent().addClass('has-error');
-				}
-
-				$save.prop('disabled', true);
-
-				const attributes = [];
-				let errors = 0;
-
-				$attributes.find('.js-attribute').each((index, attribute) => {
-					const $attribute = $(attribute);
-					const $name = $attribute.find('.js-attribute-name');
-					const name = $name.val();
-					const isList = $attribute.find('.js-attribute-is-list').prop('checked');;
-					const type = $attribute.find('.js-attribute-type').val();
-					const otherRobot = $attribute.find('.js-robot').val();
-
-					if (!name || attributes.filter((a) => a.name === name).length) {
-						$name.parent().addClass('has-error');
-						errors++;
-						return;
-					}
-
-					const newAttribtue = {
-						name,
-						type: isList ? [type] : type,
-						id: otherRobot, // even if the type isn't "Robot", still include this as it doesn't hurt.
-					}
-
-					attributes.push(newAttribtue);
-				});
-
-				$save.prop('disabled', false);
-
-				if(!errors) {
-					const newFactory = {
-						name: $factoryNameInput.val(),
-						schema: attributes
-					}
-
-					RobotFactories.add(newFactory, () => {}, (err) => {console.error(err)});
-				}
-			}); */
 		});
 }(jQuery.noConflict(), duck)
 

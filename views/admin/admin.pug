@@ -39,65 +39,67 @@ block content
 				if user && user.isAdmin
 					.alert.alert-danger
 						p: strong To Do
+						h6 Primary
+						ul
+							li On create, clear name and attributes
+							li On create, give user a proper notification
+						h6 Secondary
 						ul
 							li Default value
 							li Is Editable
 							li Radio
 							li List of Boolean
 
-				div(robot-factory='factory')
-					.panel.panel-primary(data-position='2.0')
-						.panel-heading: h3.panel-title Create a Robot Factory
-						.panel-body
-							p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
+				.panel.panel-primary(data-position='2.0', robot-factory='factory')
+					.panel-heading: h3.panel-title Create a Robot Factory
+					.panel-body
+						p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
 
-							.form-group
-								label These Robots will be a type of:
-									input.form-control(type='text', placeholder='Bending Unit', factory-id= newFactoryId, robot-factory='name')
+						.form-group
+							label These Robots will be a type of:
+								input.form-control(type='text', placeholder='Bending Unit', factory-id= newFactoryId, robot-factory='name')
 
-							p Now you can dictate what your #[strong Robots] can know.
+						p Now you can dictate what your #[strong Robots] can know.
 
-						table.table
-							thead
-								tr
-									th Attribute
-									th
-									th Type
-									th
-									th
-									th
-							tbody(robot-factory='attributes')
-								tr(robot-factory='attribute')
-									td
-										input.form-control(type='text', placeholder='Favorite Alcohol', robot-factory='attribute-name')
-									td
-										//button.btn.btn-default 
-										.checkbox
-											label
-												input.js-attribute-is-list(type='checkbox')
-												| Is List of
-									td
-										select.form-control.js-attribute-type
-											option(value='String') A little Text
-											option(value='Wysiwyg') A lot of Text
-											option Number
-											option(value='Bool') Boolean (true/false)
-											option Image
-											option(value='Robot') Another Robot
-											option User
-											option Date
-									td
-									td
-										select.js-robot.form-control(disabled)
-											option(value= newFactoryId) Sibling Robots!
-									td(style='padding-top: 12px')
-										button.btn.btn-danger.js-delete &times;
-						.panel-footer.text-right
-							button#AddAttribute.btn.btn-primary Add Some Robot Knowledge
-
-					.form-group
-						.text-right
-							button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
+					table.table
+						thead
+							tr
+								th Attribute
+								th
+								th Type
+								th
+								th
+								th
+						tbody(robot-factory='attributes')
+							tr(robot-factory='attribute')
+								td
+									input.form-control(type='text', placeholder='Favorite Alcohol', robot-factory='attribute-name')
+								td
+									//button.btn.btn-default 
+									.checkbox
+										label
+											input(type='checkbox', robot-factory='attribute-is-list')
+											| Is List of
+								td
+									select.form-control(robot-factory='attribute-type')
+										option(value='String') A little Text
+										option(value='Wysiwyg') A lot of Text
+										option Number
+										option(value='Bool') Boolean (true/false)
+										option Image
+										option(value='Robot') Another Robot
+										option User
+										option Date
+								td
+								td
+									select.form-control(disabled, robot-factory='attribute-robot')
+										option(value= newFactoryId) Sibling Robots!
+								td(style='padding-top: 12px')
+									button.btn.btn-danger(robot-factory='attribute-delete') &times;
+					.panel-body.text-right
+						button.btn.btn-primary(robot-factory='attribute-add') Add Some Robot Knowledge
+					.panel-footer.text-right
+						button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
 
 				h2(data-position='3') Bodies
 				p.
