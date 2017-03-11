@@ -30,7 +30,29 @@ body {
   line-height: @line-height-base;
   color: @text-color;
   background-color: @body-bg;
+  display: table
 }
+
+html, body, .site-main {
+  height: 100%;
+}
+
+html, body, .site-main,
+.site-header, .site-footer {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.site-main,
+.site-header, .site-footer {
+  display: table-row;
+}
+
+.footer-content {
+  padding: 60px;
+  background: @grey-lighter;
+}
+
 
 // Reset fonts for relevant elements
 input,

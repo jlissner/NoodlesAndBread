@@ -39,7 +39,7 @@ block content
 				.alert.alert-info
 					p You can create a test robot to see a preview of what the body will look like on a real <strong>Robot</strong>! What your robot has is decided by the <strong>Factory</strong> you choose. If something needs to be changed, you can edit your <strong>Factory</strong>; but doing so might break your other robots.
 				p.text-right
-					<a class='btn btn-danger' href='#'>Edit your Factory</a>
+					a.btn.btn-danger(href='#') Edit your Factory
 
 				.js-test-data.form-horizontal
 					p Please select a factory, then we can work on making your test <strong>Robot</strong>
@@ -55,12 +55,6 @@ block content
 					tr
 						td(style='padding: 0;').js-body-code
 						td: .js-preview
-			//.row
-				.col-xs-6
-					.js-body-code(style='min-height: 300px')
-				.col-xs-6
-					.panel-body.js-preview(style='min-height: 300px;border-style: solid;border-width: 0 0 0 3px;border-color: #eee;')
-						p You're preview will show here once you have typed something over there
 
 			.panel-footer.text-right
 					button.ja-see-preview.btn.btn-primary Preview
@@ -76,6 +70,7 @@ block content
 
 	script.
 		void function initRobot($, duck){
+			const RobotBody = duck('RobotBodies')
 			const factories = !{JSON.stringify(factories)};
 			const $factorySelect = $('.js-factory-select');
 			const $body = $('.js-body-code');
@@ -170,17 +165,13 @@ block content
 					return;
 				}
 
-				$.ajax({
-					type: 'POST',
-					url: '/robot/writeBody',
-					data: {text, name, factoryId},
-					success: () => {
-						window.location.href = `/make-robot?factory=${factoryId};body=${name}`;
-					},
-					error: (err) => {
-						console.error(err);
-					}
-				})
+				const newBody = {
+					name,
+					factory: factoryId,
+					body: text
+				}
+
+				RobotBody.add(newBody, () => {}, (err) => {console.error(err)});
 			});
 
 		}(jQuery.noConflict(), duck);

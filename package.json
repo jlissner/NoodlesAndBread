@@ -24,7 +24,6 @@
     "express-session": "~1.11.3",
     "formidable": "^1.0.17",
     "method-override": "~1.0.0",
-    "mkdirp": "^0.5.1",
     "node-cache": "^3.2.1",
     "nodemailer": "^2.5.0",
     "nodemailer-smtp-transport": "^2.6.0",

@@ -1,77 +1,37 @@
 extends layout.pug
 
-append head
-	script(src='3rdParty/codemirror/codemirror.js')
-	script(src='3rdParty/codemirror/mode/pug/pug.js')
-	link(rel='stylesheet', href='3rdParty/codemirror/codemirror.css')
-
 block content
 	.container
 		.page-header
-			h1 Create a Robot Body
-		p.lead A <em>Robot Body</em> will shape your <em>Robot</em> and tell it what to look like.
+			h1 Create a Robot
+		p.lead Oh boy, let's make some #[strong Robots]! A #[strong Robot] is what actually knows things. What a #[strong Robot] can know is dictated by what #[strong Factory] it is built from.
 
 		.panel.panel-default
-			.panel-heading
-				h2.panel-title The Basics
-			.panel-body.form-horizontal
-				.alert.alert-info
-					p Lets get started with the easy stuff :). The <strong>Body Name</strong> is what it will show up as when chosing a body for your <strong>Robot</strong>. The <strong>Factory</strong> dictaces what kind of <strong>Robots</strong> will be able to use this <strong>Body</strong>.
-
+			.panel-heading: h2.panel-title Step 1
+			.panel-body
 				.form-group
-					label.col-sm-2.control-label Body Name
-					.col-sm-10
-						input.form-control.js-body-name(type='text', placeholder='Name')
-
-				.form-group
-					label.col-sm-2.control-label Factory
-					.col-sm-10
+					label Choose a Facotry
 						select.form-control.js-factory-select
 							option(value='false') Select a Factory!
 							for factory in factories ? factories : []
 								option(value= factory.Id)= factory.name
+			.panel-footer
+				.text-right
+					| Need a new #[strong Factory]? #[a(href='/make-robot-factory').btn.btn-primary Make One!]
 
-			.panel-footer.text-right: a(href='/make-robot-factory').btn.btn-primary Click here to make a new factory!
-
-		.panel.panel-default
-			.panel-heading Test Robot
+		.panel.panel-default(duck-table='Robots', duck-function='add', duck-key='Id')
+			.hidden(duck-field='_Id', duck-type='string')
+				input(type='string', value= uuid(), duck-value)
+			.panel-heading: h2.panel-title Step 2
 			.panel-body
-				.alert.alert-info
-					p You can create a test robot to see a preview of what the body will look like on a real <strong>Robot</strong>! What your robot has is decided by the <strong>Factory</strong> you choose. If something needs to be changed, you can edit your <strong>Factory</strong>; but doing so might break your other robots.
-				p.text-right
-					<a class='btn btn-danger' href='#'>Edit your Factory</a>
+				p: strong What does this Robot Know?
 
-				.js-test-data.form-horizontal
-					p Please select a factory, then we can work on making your test <strong>Robot</strong>
+				.js-robot.form-horizontal
+					p Once you select a <strong>Factory</strong>, then we can start making your <strong>Robot</strong>
 
-		.panel.panel-primary
-			.panel-heading Body
-			table.table.table-bordered
-				thead
-					tr
-						th.col-xs-6 Body
-						th.col-xs-6 Preview
-				tbody
-					tr
-						td(style='padding: 0;').js-body-code
-						td: .js-preview
-			//.row
-				.col-xs-6
-					.js-body-code(style='min-height: 300px')
-				.col-xs-6
-					.panel-body.js-preview(style='min-height: 300px;border-style: solid;border-width: 0 0 0 3px;border-color: #eee;')
-						p You're preview will show here once you have typed something over there
-
-			.panel-footer.text-right
-					button.ja-see-preview.btn.btn-primary Preview
-
-		div(style='position: relative;')
-			.js-error.alert.alert-danger.text-center(style='position: absolute; bottom: 0; right: 0; width: 300px;display: none;')
-				p You must select a #[strong Factory], give the #[strong Body] a #[strong Name], and make sure the #[strong Body] has at least 1 line of text.
-
-		.form-group
-			.text-right
-				button#SaveBody.btn.btn-success Save
+			.panel-footer
+				.text-right
+					button.btn.btn-success(duck-button='submit') Make this #[strong Robot]!
 
 
 	script.
@@ -79,56 +39,177 @@ block content
 			const factories = !{JSON.stringify(factories)};
 			const $factorySelect = $('.js-factory-select');
 			const $body = $('.js-body-code');
-			const $testData = $('.js-test-data');
-			const $preview = $('.js-preview');
-			const $previewButton = $('.ja-see-preview');
-			const $save = $('#SaveBody');
-			const $error = $('.js-error');
-			const $name = $('.js-body-name');
-			const codemirrorOptions = {
-				smartIndent: true,
-				indentWithTabs: true,
-				lineNumbers: true,
-			};
-			const codemirror = CodeMirror($body[0], codemirrorOptions);
+			const $robotForm = $('[duck-table]');
+			const $robot = $('.js-robot');
 
-			function previewBody(e) {
-				e.stopPropagation();
-				e.preventDefault();
-				
-				const testData = {};
-
-				$testData.find('.form-group').each((index, item) => {
-					const $item = $(item);
-
-					testData[$item.find('.control-label').text()] = $item.find('.form-control').val();
-				});
-
-				$.ajax({
-					url: '/renderPug',
-					data: {pug: codemirror.getValue(), locals: testData},
-					success: (data) => {
-						$preview.html(data);
-					},
-					error: (err) => {
-						console.error(err)
-					}
-				});
-			}
-
-			function newAttribute(attribute) {
-				const name = attribute.name;
-				const type = attribute.type;
-				const id = attribute.id;
-
+			function makeFormObject(type, name, isForArray) {
 				switch (type) {
-					case "String":
-					default: {
+					case "Robot": {
+						if (isForArray) {
+							return `
+								Coming soon!
+							`
+						}
+
 						return `
-							<div class='form-group'>
+							Coming soon!
+						`
+					}
+					case "Bool": {
+						if (isForArray) {
+							return `
+								Coming soon!
+							`
+						}
+
+						return `
+							<div class='form-group' duck-field='${name}' duck-type='bool'>
+								<div class='checkbox'>
+									<label>
+										<input type='checkbox' />
+										${name}
+									</label>
+								</div>
+							</div>
+						`
+					}
+					case "Image": {
+						if (isForArray) {
+							return `
+								Coming soon!
+							`
+						}
+
+						return `
+							<div class='form-group' duck-type='string' duck-field='${name}'>
 								<label class='col-sm-2 control-label'>${name}</label>
 								<div class='col-sm-10'>
-									<input class='form-control' type='text' placeholder='${name}' />
+									<input class='form-control' type='text' placeholder='${name}' duck-value='duck-value' />
+								</div>
+							</div>
+						`
+					}
+					case "Number": {
+						if (isForArray) {
+							return `
+								<div class='col-sm-10'>
+									<div>
+										<p style='display: flex; align-items: center;' duck-type='string'>
+											<i class='fa fa-arrows-v' aria-hidden='true' style='margin-left: 15px;'></i>
+											<input class='form-control' type='number' placeholder='${name}' duck-value='duck-value' style='margin:0 15px;' />
+											<button class='btn btn-danger' duck-button='delete'></button>
+										</p>
+									</div>
+									<p class='text-right'>
+										<button class='btn btn-primary' duck-button='add'>Add ${name}</button>
+									</p>
+								</div>
+							`
+						}
+
+						return `
+							<div class='form-group' duck-type='number' duck-field='${name}'>
+								<label class='col-sm-2 control-label'>${name}</label>
+								<div class='col-sm-10'>
+									<input class='form-control' type='number' placeholder='${name}' duck-value='duck-value' />
+								</div>
+							</div>
+						`
+					}
+					case "User": {
+						if (isForArray) {
+							return `
+								<div class='col-sm-10'>
+									<div>
+										<p style='display: flex; align-items: center;' duck-type='string'>
+											<i class='fa fa-arrows-v' aria-hidden='true' style='margin-left: 15px;'></i>
+											<input class='form-control' type='text' placeholder='${name}' duck-value='duck-value' style='margin:0 15px;' />
+											<button class='btn btn-danger' duck-button='delete'></button>
+										</p>
+									</div>
+									<p class='text-right'>
+										<button class='btn btn-primary' duck-button='add'>Add ${name}</button>
+									</p>
+								</div>
+							`
+						}
+
+						return `
+							<div class='form-group' duck-type='string' duck-field='${name}'>
+								<label class='col-sm-2 control-label'>${name}</label>
+								<div class='col-sm-10'>
+									<input class='form-control' type='date' placeholder='${name}' duck-value='duck-value' />
+								</div>
+							</div>
+						`
+					}
+					case "Date": {
+						if (isForArray) {
+							return `
+								<div class='col-sm-10'>
+									<div>
+										<p style='display: flex; align-items: center;' duck-type='string'>
+											<i class='fa fa-arrows-v' aria-hidden='true' style='margin-left: 15px;'></i>
+											<input class='form-control' type='date' placeholder='${name}' duck-value='duck-value' style='margin:0 15px;' />
+											<button class='btn btn-danger' duck-button='delete'></button>
+										</p>
+									</div>
+									<p class='text-right'>
+										<button class='btn btn-primary' duck-button='add'>Add ${name}</button>
+									</p>
+								</div>
+							`
+						}
+
+						return `
+							<div class='form-group' duck-type='string' duck-field='${name}'>
+								<label class='col-sm-2 control-label'>${name}</label>
+								<div class='col-sm-10'>
+									<input class='form-control' type='date' placeholder='${name}' duck-value='duck-value' />
+								</div>
+							</div>
+						`
+					}
+					case "Wysiwyg": {
+						if (isForArray) {
+							return `
+								Coming soon!
+							`
+						}
+
+						return `
+							<div class='form-group' duck-type='wysiwyg' duck-field='${name}'>
+								<label class='col-sm-2 control-label'>${name}</label>
+								<div class='col-sm-10'>
+									<div class='summernote'></div>
+								</div>
+							</div>
+						`
+					}
+					case "String":
+					default: {
+						if (isForArray) {
+							return `
+								<div class='col-sm-10'>
+									<div>
+										<p style='display: flex; align-items: center;' duck-type='string'>
+											<i class='fa fa-arrows-v' aria-hidden='true' style='margin-left: 15px;'></i>
+											<input class='form-control' type='text' placeholder='${name}' duck-value='duck-value' style='margin:0 15px;' />
+											<button class='btn btn-danger' duck-button='delete'></button>
+										</p>
+									</div>
+									<p class='text-right'>
+										<button class='btn btn-primary' duck-button='add'>Add ${name}</button>
+									</p>
+								</div>
+							`
+						}
+
+						return `
+							<div class='form-group' duck-type='string' duck-field='${name}'>
+								<label class='col-sm-2 control-label'>${name}</label>
+								<div class='col-sm-10'>
+									<input class='form-control' type='text' placeholder='${name}' duck-value='duck-value' />
 								</div>
 							</div>
 						`
@@ -136,51 +217,53 @@ block content
 				}
 			}
 
-			$previewButton.on('click', previewBody);
+			function newAttribute(attribute) {
+				const name = attribute.name;
+				const type = attribute.type;
+				const id = attribute.id;
+
+				if (type instanceof Array) {
+					const $array = $('<div>', {
+						'class': 'form-group',
+						'style': 'width: 100%;',
+						'duck-field': name,
+						'duck-type': 'array',
+					});	
+
+					const listType = type[0]
+
+					$array.append(`<label class='col-sm-2 control-label'>${name}</label>`)
+					$array.append(makeFormObject(listType, name, true));
+
+					return $array;
+				} else {
+					return makeFormObject(type, name);
+				}
+			}
 			$factorySelect.on('input', (e) => {
 				e.stopPropagation();
 				e.preventDefault();
 
-				const factory = factories.filter((_factory) => _factory.Id === $factorySelect.val())[0];
+				const facotryId = $factorySelect.val()
+				const factory = factories.filter((_factory) => _factory.Id === facotryId)[0];
 
 				if (!factory) {
-					$testData.html('<p>Please select a factory, then we can work on making your test <strong>Robot</strong></p>');
+					$robot.html('<p>Once you select a <strong>Factory</strong>, then we can start making your <strong>Robot</strong></p>');
 					return;
 				}
-				$testData.html('');
+				$robot.html('');
 
 				factory.schema.forEach((attribute) => {
-					$testData.append(newAttribute(attribute));
+					$robot.append(newAttribute(attribute));
 				});
 
-			});
+				$robotForm.find('.summernote').summernote({height: '150px'});
 
-			$save.on('click', (e) => {
-				e.stopPropagation();
-				e.preventDefault();
+				$robotForm.attr('duck-key-value', facotryId);
+				$robotForm.duckForm({failureCallBack: (err) => {
+					console.log(err)
+				}});
 
-				const name = $name.val();
-				const factoryId = $factorySelect.val();
-				const text = codemirror.getValue();
-
-				if(!name || !text || factoryId === 'false') {
-					$error.slideDown(270);
-					setTimeout(()=>{$error.slideUp(270);}, 3000)
-
-					return;
-				}
-
-				$.ajax({
-					type: 'POST',
-					url: '/robot/writeBody',
-					data: {text, name, factoryId},
-					success: () => {
-						window.location.href = `/make-robot?factory=${factoryId};body=${name}`;
-					},
-					error: (err) => {
-						console.error(err);
-					}
-				})
 			});
 
 		}(jQuery.noConflict(), duck);

@@ -2,6 +2,20 @@
 void function initializeCustomScroll($) {
     'use strict';
 
+    function setHeightTo100($elem) {
+        $elem.css('height', '100%');
+    }
+
+    function checkHeight($elem, $wrapper) {
+        if($wrapper.height() === 0) {
+            setHeightTo100($elem);
+
+            if($wrapper.height() === 0 && $elem.parent().length) {
+                checkHeight($elem.parent(), $wrapper);
+            }
+        }
+    }
+
     const initScroll = function initScroll(wrapper) {
 
         const $wrapper = $(wrapper);
@@ -136,6 +150,8 @@ void function initializeCustomScroll($) {
         }
 
         $(window).on('load', checkReInitScroll);
+
+        checkHeight($wrapper.parent(), $wrapper);
 
         $wrapper.trigger('initScroll');
     };

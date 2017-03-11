@@ -5,6 +5,7 @@
 	position: relative;
 	transition: left .17s ease-out;
 	display: inline-block;
+	min-width: 290px;
 
 	> [role='tab']{
 		background: white;
@@ -16,7 +17,7 @@
 		position: relative;
 
 		&.active {
-			background: @brand-info;
+			background: @brand-primary;
 		}
 	}
 		h3{
@@ -53,7 +54,7 @@
 			width: 100%;
 		}
 			.active{
-				background: @brand-info;
+				background: @brand-primary;
 			}
 	}
 		li {
@@ -96,7 +97,7 @@
 			padding: 0 0 0 @gw-Sm;
 
 			&:hover{
-				border-left: 3px solid @brand-info;
+				border-left: 3px solid @brand-primary;
 				padding-left: @gw-Sm - 3px;
 			}
 
@@ -105,8 +106,8 @@
 			}
 		}
 			.active{
-				color: @brand-info;
-				border-left: 3px solid @brand-info;
+				color: @brand-primary;
+				border-left: 3px solid @brand-primary;
 				padding-left: @gw-Sm - 3px;
 			}
 

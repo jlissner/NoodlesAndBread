@@ -1,7 +1,8 @@
 const User         = require('../schemas/user');
 const RobotFactory = require('../schemas/robotFactory');
-const Page         = require('../schemas/page');
+const RobotBody    = require('../schemas/robotBody');
 const Robot        = require('../schemas/robot');
+const Page         = require('../schemas/page');
 
 function pickTable(table) {
 	switch(table) {
@@ -11,8 +12,11 @@ function pickTable(table) {
 		case 'RobotFactories': {
 			return RobotFactory;
 		}
+		case 'RobotBodies': {
+			return RobotBody;
+		}
 		case 'Robots': {
-			return RobotFactory;
+			return Robot;
 		}
 		case 'Pages': {
 			return Page;

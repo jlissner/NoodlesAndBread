@@ -1,95 +1,77 @@
-extends layout.pug
+/* global jQuery, duck */
 
-block content
-	- var id = uuid();
+void function initRobots($, duck){
+	'use strict';
 
-	.container
-		.page-header
-			h1 Create a Robot Factory
-		p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
+	// Factory
+		const RobotFactories = duck('RobotFactories');
 
-		.row
-			.col-xs-12.col-sm-6.col-md-4
-				.form-group
-					label These Robots will be a type of:
-						input.form-control.js-factory-name-input(type='text', placeholder='Bending Unit', factory-id= id)
-			if user.isAdmin
-				.col-xs-12.col-sm-6.col-md-8
-					.alert.alert-danger
-						p: strong To Do
-						ul
-							li Default value
-							li Is Editable
-							li Radio
-							li List of Boolean
-
-		.panel.panel-primary
-			.panel-heading <span class='js-factory-name'>--------</span>
-
-			table.table
-				thead
-					tr
-						th Attribute
-						th
-						th Type
-						th
-						th
-						th
-				tbody.js-attributes
-					tr.js-attribute
-						td
-							input.form-control.js-attribute-name(type='text', placeholder='Favorite Alcohol')
-						td
-							//button.btn.btn-default 
-							.checkbox
-								label
-									input.js-attribute-is-list(type='checkbox')
-									| Is List of
-						td
-							select.form-control.js-attribute-type
-								option(value='String') A little Text
-								option(value='Wysiwyg') A lot of Text
-								option Number
-								option(value='Bool') Boolean (true/false)
-								option Image
-								option(value='Robot') Another Robot
-								option User
-								option Date
-						td
-						td
-							select.js-robot.form-control(disabled)
-								option(value= id) Sibling Robots!
-						td(style='padding-top: 12px')
-							button.btn.btn-danger.js-delete &times;
-			.panel-footer.text-right
-				button#AddAttribute.btn.btn-primary Add Some Robot Knowledge
-
-		.form-group
-			.text-right
-				button#SaveFactory.btn.btn-success Create #[strong Factory]
-
-
-	script.
-		void function initFactory($, duck){
-			const RobotFactories = duck('RobotFactories');
-			const $attributes = $('.js-attributes');
-			const $addAttribute = $('#AddAttribute');
-			const $newAttribute = $('.js-attribute').first().clone();
-			const $factoryNameInput = $('.js-factory-name-input');
-			const $save = $('#SaveFactory');
-
-			$factoryNameInput.on('input', (e) => {
+		function validateFactoryName(e, _$factoryName) {
+			if (e) {
 				e.stopPropagation();
 				e.preventDefault();
-				
-				const $parent = $factoryNameInput.parent()
-				if($parent.hasClass('has-error') && $factoryNameInput.val()) {
-					$parent.removeClass('has-error');
+			}
+
+			const $factoryName = _$factoryName || $(e.currentTarget);
+			const name = $factoryName.val();
+
+			RobotFactories.get(null, (factories) => {
+				for (let i = 0, length = factories.length; i < length; i++) {
+					if(!name || factories[i].name.toLowerCase() === name.toLowerCase()) {
+						$factoryName.trigger('validateFactoryName', [false]);
+						return;
+					}
 				}
 
-				const $factoryName = $('.js-factory-name');
-				$factoryName.text($factoryNameInput.val() || '--------');
+				$factoryName.trigger('validateFactoryName', [true]);
 			});
+		}
+
+		function initFactory(factory) {
+			const $factory = $(factory);
+			const $factoryName = $factory.find('[robot-factory="name"]');
+			const $factoryAttributes = $factory.find('[robot-factory="attributes"]');
+			//const $newfactoryAttribute = $factoryAttributes.find('[robot-factory="attribute"]').clone();
+			const $saveFactory = $factory.find('[robot-factory="save"]');
+
+			$factoryName.on('input', validateFactoryName);
+			$factory.on('validateFactoryName', (e, isValid) => {
+				e.stopPropagation();
+
+				const $parent = $factoryName.parent();
+				$parent.removeClass('has-success has-error');
+
+				if(isValid) {
+					$parent.addClass('has-success');
+					$saveFactory.prop('disabled', false);
+				} else {
+					$parent.addClass('has-error');
+					$saveFactory.prop('disabled', true);
+				}
+			});
+
+			$factoryAttributes.on('input', '[robot-factory="attribute-name"]', (e) => {
+				e.stopPropagation();
+				e.preventDefault();
+
+				const $name = $(e.currentTarget);
+				const $parent = $name.parent();
+
+				if($parent.hasClass('has-error') && $name.val()) {
+					$parent.removeClass('has-error');
+				}
+			});
+		}
+
+		$(() => {
+			initFactory("[robot-factory='factory']");
+			/*const $attributes = $('.js-attributes');
+			const $addAttribute = $('#AddAttribute');
+			const $newAttribute = $('.js-attribute').first().clone();
+			
+			const $save = $('#SaveFactory');
+			
+
 
 			$attributes.on('input', '.js-attribute-name', (e) => {
 				e.stopPropagation();
@@ -197,5 +179,10 @@ block content
 
 					RobotFactories.add(newFactory, () => {}, (err) => {console.error(err)});
 				}
-			});
-		}(jQuery.noConflict(), duck);
+			}); */
+		});
+}(jQuery.noConflict(), duck)
+
+// Body
+
+// Robot

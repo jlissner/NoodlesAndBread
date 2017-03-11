@@ -18,10 +18,10 @@ const routes           = require('./routes/index');
 const ajax             = require('./routes/ajax');
 const admin            = require('./routes/admin');
 const User             = require('./schemas/user');
-const Data             = require('./schemas/data');
 const RobotFactory     = require('./schemas/robotFactory');
-const Page             = require('./schemas/page');
+const RobotBody        = require('./schemas/robotBody');
 const Robot            = require('./schemas/robot');
+const Page             = require('./schemas/page');
 
 const fs               = require('fs');
 const app              = express();
@@ -97,8 +97,9 @@ app.use(
     globalLocals, // set variables and functions to be used on all views, mainly helper functions
     User.getCached(), // get/set cache of all tables
     Page.getCached(),
-    Data.getCached(),
-    RobotFactory.getCached()
+    RobotFactory.getCached(),
+    RobotBody.getCached(),
+    Robot.getCached()
 );
 
 // CRUD

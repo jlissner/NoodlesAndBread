@@ -76,7 +76,7 @@ void function initSite($){
 	}
 
 	$(() => {
-		const $site = $('#Site');
+		const $site = $('#Noodles');
 		$site.prop('registeredHomes', $site.prop('registeredHomes') || []);
 
 		$site.on('loadRobots', {site: $site}, loadRobots);

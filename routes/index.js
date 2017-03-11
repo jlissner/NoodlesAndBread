@@ -11,6 +11,12 @@ const router       = express.Router();
 
 strategies.local(passport);
 
+router.get('/admin', (req, res) => {
+	res.render('admin/admin', {
+		factories: RobotFactory.cached(),
+	});
+});
+
 router.get('/make-robot-factory', (req, res) => {
 	res.render('make-robot-factory');
 });

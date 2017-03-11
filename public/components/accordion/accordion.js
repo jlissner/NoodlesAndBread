@@ -158,7 +158,10 @@ void function initializeAccordions($) {
         //only trigger tab change if the tab we are going to isn't currently open
         if($anchorTab.attr('aria-expanded') === 'false'){
             $(window).on('load', () => {
-                $anchorTab.click();
+                setTimeout(() => {
+                    $anchorTab.click();    
+                }, 10);
+                
             });
         }
 

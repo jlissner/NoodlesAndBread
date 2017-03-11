@@ -30,12 +30,10 @@ void function initDuck($){
 	}
 
 	// renders a pug file with given locals
-	function renderPug(file, locals, success) {
+	function renderPug(pug, locals, success) {
 		$.ajax({
-			type: 'GET',
 			url: '/renderPug',
-			contentType: 'json',
-			data: {file, locals},
+			data: {pug, locals},
 			success,
 		});
 	}
@@ -44,28 +42,30 @@ void function initDuck($){
 	// request = {html: (optional)String, template: (optional)String, toEmail: (optional)String, subject: String}
 	// success = function
 	// failure = function
-	function sendEmail(request, success, failure) {
+	function sendEmail(request, success, error) {
 		$.ajax({
 			type: 'POST',
 			data: JSON.stringify(request),
 			url: '/sendEmail',
 			contentType: 'application/json',
-		}).done(success).fail(failure);
+			success,
+			error,
+		});
 	}
 
 	// send an email to the appropiate user, giving them a randomized, unique password
 	// id = string (id of user in database)
-	// successCallback = function
-	// errorCallback = function
-	function sendResetEmail(email, successCallback, errorCallback) {
+	// success = function
+	// success = function
+	function sendResetEmail(email, success, error) {
 		return () => {
 			$.ajax({
 				url: `/reset-password`,
 				contentType: 'application/json',
 				data: JSON.stringify({ email }),
 				method: 'POST',
-				success: successCallback,
-				error: errorCallback,
+				success,
+				error,
 			});
 		}
 	}
@@ -108,14 +108,14 @@ void function initDuck($){
 	}
 
 	function _duck(table) {
-		this.add = (item, successCallback, errorCallback) => {
+		this.add = (item, success, error) => {
 			$.ajax({
 				url: `/add/${table}`,
 				contentType: 'application/json',
 				method: 'POST',
 				data: JSON.stringify(item),
-				success: successCallback,
-				error: errorCallback,
+				success,
+				error,
 			});
 		}
 
@@ -124,13 +124,13 @@ void function initDuck($){
 		// -- (dynamic)value - matches the type the field represents
 		// -- (bool)findOne - if true, returns at most 1 item
 		// if no options are passed in, return how many items are in the table
-		this.exists = (options, successCallback, errorCallback) => {
+		this.exists = (options, success, error) => {
 			$.ajax({
 				url: `/exists/${table}`,
 				contentType: 'json',
 				data: options,
-				success: successCallback,
-				error: errorCallback,
+				success,
+				error,
 			});
 		}
 
@@ -139,47 +139,47 @@ void function initDuck($){
 		// -- (dynamic)value - matches the type the field represents
 		// -- (bool)findOne - if true, returns at most 1 item
 		// if no options are passed in, return all items in provided table
-		this.get = (options, successCallback, errorCallback) => {
+		this.get = (options, success, error) => {
 			$.ajax({
 				url: `/get/${table}`,
 				contentType: 'json',
 				dataType: 'json',
 				data: options,
-				success: successCallback,
-				error: errorCallback,
+				success,
+				error,
 			});
 		}
 
 		// (object)item is what will be added to the table provided
-		this.update = (item, successCallback, errorCallback) => {
+		this.update = (item, success, error) => {
 			$.ajax({
 				url: `/update/${table}`,
 				contentType: 'application/json',
 				method: 'POST',
 				data: JSON.stringify({item}),
-				success: successCallback,
-				error: errorCallback,
+				success,
+				error,
 			});
 		}
 
 		// (string)id is which item will be deleted from the provided table
-		this.delete = (id, successCallback, errorCallback) => {
+		this.delete = (id, success, error) => {
 			$.ajax({
 				url: `/delete/${table}`,
 				contentType: 'application/json',
 				method: 'POST',
 				data: JSON.stringify({key: id}),
-				success: successCallback,
-				error: errorCallback,
+				success,
+				error,
 			});
 		}
 
-		this.clearCache = (successCallback, errorCallback) => {
+		this.clearCache = (success, error) => {
 			$.ajax({
 				url: `/admin/clear-cache/${table}`,
 				method: 'POST',
-				success: successCallback,
-				error: errorCallback,
+				success,
+				error,
 			});
 		}
 	}

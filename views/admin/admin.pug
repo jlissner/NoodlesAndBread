@@ -1,0 +1,124 @@
+extends ../layout.pug
+
+append head
+	script(src='3rdParty/codemirror/codemirror.js')
+	script(src='3rdParty/codemirror/mode/pug/pug.js')
+	link(rel='stylesheet', href='3rdParty/codemirror/codemirror.css')
+
+block content
+	.container(style='display: flex;')
+		include nav.pug
+
+		#NavContentWrapper
+			.js-nav-nodes(style='padding: 15px 30px 15px 15px;')
+
+				h2(style='margin-top: 0;' data-position='0') Site
+
+				.panel.panel-default(data-position='0.0')
+					.panel-heading: h2.panel-title Manage Site Settings
+					.panel-body
+						p.
+							Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+							tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+							quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+							consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+							cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+							proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+				h2(data-position='1') Pages
+				p.
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+				h2(data-position='2') Factories
+				- var newFactoryId = uuid();
+				if user && user.isAdmin
+					.alert.alert-danger
+						p: strong To Do
+						ul
+							li Default value
+							li Is Editable
+							li Radio
+							li List of Boolean
+
+				div(robot-factory='factory')
+					.panel.panel-primary(data-position='2.0')
+						.panel-heading: h3.panel-title Create a Robot Factory
+						.panel-body
+							p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
+
+							.form-group
+								label These Robots will be a type of:
+									input.form-control(type='text', placeholder='Bending Unit', factory-id= newFactoryId, robot-factory='name')
+
+							p Now you can dictate what your #[strong Robots] can know.
+
+						table.table
+							thead
+								tr
+									th Attribute
+									th
+									th Type
+									th
+									th
+									th
+							tbody(robot-factory='attributes')
+								tr(robot-factory='attribute')
+									td
+										input.form-control(type='text', placeholder='Favorite Alcohol', robot-factory='attribute-name')
+									td
+										//button.btn.btn-default 
+										.checkbox
+											label
+												input.js-attribute-is-list(type='checkbox')
+												| Is List of
+									td
+										select.form-control.js-attribute-type
+											option(value='String') A little Text
+											option(value='Wysiwyg') A lot of Text
+											option Number
+											option(value='Bool') Boolean (true/false)
+											option Image
+											option(value='Robot') Another Robot
+											option User
+											option Date
+									td
+									td
+										select.js-robot.form-control(disabled)
+											option(value= newFactoryId) Sibling Robots!
+									td(style='padding-top: 12px')
+										button.btn.btn-danger.js-delete &times;
+						.panel-footer.text-right
+							button#AddAttribute.btn.btn-primary Add Some Robot Knowledge
+
+					.form-group
+						.text-right
+							button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
+
+				h2(data-position='3') Bodies
+				p.
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+				h2(data-position='4') Robots
+				p.
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				
+
+	script.
+		void function initRobot($, duck){
+
+		}(jQuery.noConflict(), duck);

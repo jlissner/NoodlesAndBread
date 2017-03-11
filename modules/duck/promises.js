@@ -19,7 +19,7 @@ module.exports = (_duck) => {
 		const hash = this.hash;
 		const uniqueBy = this.uniqueBy;
 		const items = this.cached() || [];
-		const checkSchema = this.schemaless;
+		const schemaless = this.schemaless;
 
 		reAssign = reAssign === undefined ? false : reAssign;
 
@@ -38,7 +38,7 @@ module.exports = (_duck) => {
 				});
 			}
 
-			if (checkSchema) {
+			if (!schemaless) {
 				if(parseData(itemToAdd, schema, table) !== 'success'){ 
 					console.error('failed to add ' + JSON.stringify(data));
 

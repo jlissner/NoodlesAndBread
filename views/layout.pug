@@ -2,18 +2,20 @@ html
 	include shared/head.pug
 	block head
 
-	body#Site
-		block header
-			div(robot-home="header")
-				include shared/header.pug
-		main
+	body#Noodles
+		header.site-header
+			block header
+				div(robot-home="header")
+					include shared/header.pug
+		main.site-main
 			include shared/flash.pug
 
 			block content
 
-		block footer
-			div(robot-home="footer")
-				include shared/footer.pug
+		footer.site-footer
+			block footer
+				div(robot-home="footer")
+					include shared/footer.pug
 
 		if robots
 			script.

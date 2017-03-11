@@ -1,7 +1,5 @@
 const express    = require('express');
 const pug        = require('pug');
-const fs         = require('fs');
-const mkdirp     = require('mkdirp');
 const isLoggedIn = require('../middleware/isLoggedIn');
 const formidable = require('../middleware/formidable');
 const pickTable  = require('../modules/pickTable');
@@ -157,9 +155,12 @@ const router     = express.Router();
 	});
 
 //// utility ajax calls
-	router.get('/readPug', (req, res) => {
+	router.get('/renderPugFile', (req, res) => {
 		const params = req.query;
-		const filePath = `views/controls/${params.file}`;
+		const filePath = `views/${params.file}`;
+		const locals = params.locals
+
+		res.send(pug.compileFile(filePath)(locals));
 
 		fs.readFile(filePath, (err, data) => {
 			if(err) {
@@ -178,28 +179,6 @@ const router     = express.Router();
 	});
 
 //// robot calls
-	router.post('/robot/writeBody', (req, res) => {
-		const name = req.body.name;
-		const text = req.body.text;
-		const factoryId = req.body.factoryId;
-
-		mkdirp(`robots/${factoryId}`, (err) => {
-			if(err) {
-				res.status(500).send(err);
-				return
-			}
-
-			fs.writeFile(`robots/${factoryId}/${name}.pug`, text, (err) => {
-				if(err) {
-					res.status(500).send(err);
-					return
-				}
-
-				res.send('success');
-			});
-		});
-	});
-
 	router.get('/robot/get', (req, res) => {
 		const robot = req.query.robot;
 		const brain = require(`../robots/${robot.name}/brain`);
