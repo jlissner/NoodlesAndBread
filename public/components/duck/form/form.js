@@ -39,6 +39,10 @@ void function initDuckForm($, duck, window) {
 			$clone.find('[duck-image-value]').text('');
 		}
 
+		if($item.attr('duck-type') === 'color') {
+			$clone.spectrum({showInput: true});
+		}
+
 		switch(addDirection) {
 			case 'after' : {
 				$this.closest('[duck-type]').after($clone)

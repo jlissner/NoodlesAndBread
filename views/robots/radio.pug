@@ -1,0 +1,8 @@
+.form-group(duck-type='bool', duck-field= name)
+	label.col-sm-2.control-label= name
+	.col-sm-10
+		for option, i in radioOptions ? radioOptions : []
+			.radio
+				label
+					input(type='radio', checked= defaultValue ? defaultValue === option : i === 0, name= name)
+					| #{option}

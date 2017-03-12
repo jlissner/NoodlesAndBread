@@ -92,6 +92,7 @@ void function initSite($){
 		}, 1500);
 
 		$('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
+		$('input[type="color"]').spectrum({showInput: true});
 	});	
 	/* eslint-enable */
 }(jQuery.noConflict());

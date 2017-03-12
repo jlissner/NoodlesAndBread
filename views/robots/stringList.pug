@@ -1,0 +1,14 @@
+.form-group(duck-type='array', duck-field= name)
+	label.col-sm-2.control-label= name
+	.col-sm-10
+		div
+			for v in defaultValues ? defaultValues : [null]
+				.array-item(duck-type='string')
+					.input-group
+						.input-group-addon
+							i.fa.fa-arrows-v(aria-hidden='true')
+						input.form-control(type='text', placeholder= name, duck-value, value= v)
+						.input-group-btn
+							button.btn.btn-danger(duck-button='delete') &times;
+		p.text-right
+			button.btn.btn-primary(duck-button='add') Add #{name}

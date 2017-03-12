@@ -98,8 +98,114 @@ block content
 									button.btn.btn-danger(robot-factory='attribute-delete') &times;
 					.panel-body.text-right
 						button.btn.btn-primary(robot-factory='attribute-add') Add Some Robot Knowledge
+
+
+					//.row
+						.col-xs-6.col-xs-push-3
+							style.
+								.robot--head {
+									height: 100px;
+									width: 50%;
+									margin: 0 auto;
+									position: relative;
+									background: grey;
+								}
+								.robot--body {
+									border: 15px solid grey;
+									padding: 15px;
+									background: lightgrey;
+								}
+
+								.robot--feet {
+									height: 200px;
+									width: 50%;
+									margin: 0 auto;
+									position: relative;
+								}
+
+								.robot--feet:before,
+								.robot--feet:after {
+									content: ' ';
+									background: grey;
+									position: absolute;
+									top: 0;
+									bottom: 0;
+									width: 50px;
+								}
+								.robot--feet:before {
+									left: 0;
+								}
+
+								.robot--feet:after {
+									right: 0;
+								}
+
+
+							.robot
+								.robot--head
+								.robot--body
+									p.
+										Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+										consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+										cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+										proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								.robot--feet
+
 					.panel-footer.text-right
 						button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
+
+				.panel.panel-primary(data-position='2.1')
+					.panel-heading: h3.panel-title Preview
+					.panel-body.form-horizontal(duck-table='test', duck-function='add', duck-key='id')
+						- var name = 'String', defaultValue, defaultValues;
+						include ../robots/string.pug
+
+						- name = 'List of Strings'
+						include ../robots/stringList.pug
+
+						- name = 'Number'
+						include ../robots/number.pug
+
+						- name = 'List of Numbers'
+						include ../robots/numberList.pug
+
+						- name = 'Date'
+						include ../robots/date.pug
+
+						- name = 'List of Dates'
+						include ../robots/dateList.pug
+
+						- name = 'Checkbox'
+						include ../robots/checkbox.pug
+
+						- var radioOptions = ['Radio 1', 'Radio 2', 'Radio 3'];name = 'radio';
+						include ../robots/radio.pug
+
+						- name = 'Image'
+						include ../robots/image.pug
+
+						- name = 'List of Images'
+						include ../robots/imageList.pug
+
+						- name = 'User'
+						include ../robots/user.pug
+
+						- name = 'List of Users'
+						include ../robots/userList.pug
+
+						- name = 'Text Editor'
+						include ../robots/wysiwyg.pug
+
+						- name = 'List of Text Editors'
+						include ../robots/wysiwygList.pug
+
+						- name = 'Color'
+						include ../robots/color.pug
+
+						- name = 'List of Colors'
+						include ../robots/colorList.pug
 
 				h2(data-position='3') Bodies
 				p.
