@@ -115,7 +115,6 @@ output {
   width: 100%;
   height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
   padding: @padding-base-vertical @padding-base-horizontal;
-  margin-top: 5px;
   font-size: @font-size-base;
   font-weight: normal;
   line-height: @line-height-base;
@@ -159,6 +158,10 @@ output {
   // Reset height for `textarea`s
   textarea& {
     height: auto;
+  }
+
+  label > & {
+    margin-top: 5px;
   }
 }
 

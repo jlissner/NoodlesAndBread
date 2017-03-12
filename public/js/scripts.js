@@ -90,6 +90,8 @@ void function initSite($){
 		setTimeout(() => {
 			$('.flash-message-container').slideUp(1000);
 		}, 1500);
+
+		$('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
 	});	
 	/* eslint-enable */
 }(jQuery.noConflict());
