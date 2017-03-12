@@ -40,7 +40,11 @@ void function initDuckForm($, duck, window) {
 		}
 
 		if($item.attr('duck-type') === 'color') {
-			$clone.spectrum({showInput: true});
+			$clone.spectrum({showInput: true, preferredFormat: "hex"});
+		}
+
+		if($item.attr('duck-type') === 'date') {
+			$clone.datetimepicker({format: 'MM/DD/YYYY'});
 		}
 
 		switch(addDirection) {

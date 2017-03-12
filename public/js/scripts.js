@@ -92,7 +92,7 @@ void function initSite($){
 		}, 1500);
 
 		$('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
-		$('input[type="color"]').spectrum({showInput: true});
+		$('input[type="color"]').spectrum({showInput: true, preferredFormat: "hex"});
 	});	
 	/* eslint-enable */
 }(jQuery.noConflict());
