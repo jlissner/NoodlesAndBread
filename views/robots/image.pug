@@ -1,8 +1,9 @@
 .form-group(duck-type='image' duck-field=name)
 	label.col-sm-2.control-label= name
 	.col-sm-10
-		input.hidden(type='file')
-		input.hidden(type='hidden', duck-value, value= item && item[field])
-		button.btn.btn-secondary.p-Xs(data-icon='fa fa-image', duck-button='image-select')
-		span.pl-Sm(duck-image-value)
+		input.hidden(type='hidden', duck-value, value= value)
+		.form-control
+			i.fa.fa-image(aria-hidden='true')
+			| &nbsp;&nbsp;&nbsp;
+			span(duck-image-value)= value || 'Click to Select a File...'
 		//input.form-control(type='text', placeholder=name, duck-value='duck-value', value=defaultValue)

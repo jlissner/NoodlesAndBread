@@ -1,4 +1,4 @@
-/* global jQuery, duck, window */
+/* global jQuery, duck, SimpleMDE, window */
 
 void function initDuckForm($, duck, window) {
 	'use strict'
@@ -34,9 +34,7 @@ void function initDuckForm($, duck, window) {
 		}
 
 		if($item.attr('duck-type') === 'image') {
-			$clone.attr('duck-image-picker', $('[duck-image-picker]').length)
-			$clone.prop('filePickerInitiated', false);
-			$clone.find('[duck-image-value]').text('');
+			$clone.find('[duck-image-value]').text('This isn\'t working yet.');
 		}
 
 		if($item.attr('duck-type') === 'color') {
@@ -60,6 +58,12 @@ void function initDuckForm($, duck, window) {
 				$lastItem.after($clone);
 				break;		
 			}
+		}
+
+		if($item.attr('duck-type') === 'wysiwyg') {
+			const _simpleMDE = new SimpleMDE({element: $clone.find('.simpleMDE').html('<textarea>').find('textarea')[0], autoDownloadFontAwesome: false});
+
+			$clone.find('.simpleMDE').prop('simpleMDE', () => _simpleMDE);
 		}
 
 		$item.parent().sortable('[duck-type]');
@@ -402,4 +406,4 @@ void function initDuckForm($, duck, window) {
 	}
 
 	$(() => {$('[duck-table]').duckForm();});
-}(jQuery.noConflict(), duck, window)
+}(jQuery.noConflict(), duck, SimpleMDE, window)

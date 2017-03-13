@@ -2,15 +2,20 @@ head
 	title= title || 'Noodles & Bread'
 	meta(charset='utf-8')
 	meta(http-equiv='X-UA-Compatible', content='IE=edge')
-	meta(name='description', content= description || 'The Lissner Listner is built to record the past, present, and future.')
+	meta(name='description', content= description || 'Noodles & Bread: Know What\'s Good for Ya.')
 	meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
 	meta(name='author', content='Joe Lissner')
 
 	//// Styles & Fonts ///////////////////////////////////////////////////////
+	// not hosted local
+	link(rel="stylesheet", href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css")
 
 	// hosted local
+	link(rel='stylesheet', href='3rdParty/codemirror/codemirror.css')
 	link(rel='stylesheet', href='/styles/font-awesome/css/font-awesome.min.css', type='text/css')
 	link(rel='stylesheet', href='/styles/styles.css', type='text/css')
+
+	
 
 	//// Scripts //////////////////////////////////////////////////////////////
 	// not hosted local
@@ -19,6 +24,7 @@ head
 	script(type='text/javascript', src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
 	script(type='text/javascript', src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
 	script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js')
+	script(type='text/javascript', src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js")
 
 	// hosted local
 	script(type='text/javascript', src='/components/duck/duck.min.js')
@@ -39,11 +45,11 @@ head
 	if (user && user.isAdmin)
 		script(type='text/javascript', src='/components/duck/filepicker/filepicker.min.js')
 		script(type='text/javascript', src='/components/duck/form/form.min.js')
+	script(src='3rdParty/codemirror/codemirror.js')
+	script(src='3rdParty/codemirror/mode/markdown/markdown.js')
+	script(src='3rdParty/codemirror/mode/pug/pug.js')
 	script(type='text/javascript', src='/3rdParty/datetimepicker/bootstrap-datetimepicker.min.js')
 	script(type='text/javascript', src='/3rdParty/spectrum/spectrum.min.js')
 	script(type='text/javascript', src='/js/scripts.js')
-	
 
-	// include summernote css/js
-	link(href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css", rel="stylesheet")
-	script(src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js")
+	//script(src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js")

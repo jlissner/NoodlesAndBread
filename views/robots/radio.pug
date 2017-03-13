@@ -4,5 +4,5 @@
 		for option, i in radioOptions ? radioOptions : []
 			.radio
 				label
-					input(type='radio', checked= defaultValue ? defaultValue === option : i === 0, name= name)
+					input(type='radio', checked= value ? value === option : i === 0, name= name)
 					| #{option}

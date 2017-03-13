@@ -1,0 +1,20 @@
+.form-group(duck-type='array', duck-field= name)
+	label.col-sm-2.control-label= name
+	.col-sm-10
+		div
+			for v in values ? values : [null]
+				.array-item(duck-type='select')
+					.input-group
+						.input-group-addon
+							i.fa.fa-arrows-v(aria-hidden='true')
+						select.form-control(duck-value='duck-value')
+							option(selected= value === 'Me') Me
+							option(selected= value === 'Everyone') Everyone
+							option(selected= value === 'My Friends') My Friends
+							for list in userLists ? userLists : []
+								option(selected= value === list)= list
+						.input-group-btn
+							button.btn.btn-danger(duck-button='delete')
+								i.fa.fa-times(aria-hidden='true')
+		p.text-right
+			button.btn.btn-primary(duck-button='add') Add #{name}

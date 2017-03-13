@@ -1,0 +1,9 @@
+.form-group(duck-type='select' duck-field=name)
+	label.col-sm-2.control-label= name
+	.col-sm-10
+		select.form-control(duck-value='duck-value')
+			option(selected= value === 'Me') Me
+			option(selected= value === 'Everyone') Everyone
+			option(selected= value === 'My Friends') My Friends
+			for list in userLists ? userLists : []
+				option(selected= value === list)= list

@@ -1,5 +1,5 @@
-/*global jQuery */
-void function initSite($){
+/*global jQuery, CodeMirror, SimpleMDE */
+void function initSite($, CodeMirror, SimpleMDE){
 	'use strict'
 
 	function registerHome(e, home, _$home) {
@@ -91,8 +91,30 @@ void function initSite($){
 			$('.flash-message-container').slideUp(1000);
 		}, 1500);
 
+		// init 3rd Party Elements
+		$('.simpleMDE > textarea').each((i, simpleMDE) => {
+			const $simpleMDE = $(simpleMDE);
+			const _simpleMDE = new SimpleMDE({element: simpleMDE, autoDownloadFontAwesome: false});
+
+			$simpleMDE.prop('simpleMDE', () => _simpleMDE);
+		});
+
+
+		// init 3rd Party Elements
+		$('.codemirror').each((i, codemirror) => {
+			const $codemirror = $(codemirror);
+			const _codemirror = CodeMirror(codemirror, {
+					smartIndent: true,
+					indentWithTabs: true,
+					lineNumbers: true,
+					mode: $codemirror.attr('data-mode') || 'pug'
+			});
+
+			$codemirror.prop('codemirror', () => _codemirror);
+		});
+
 		$('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
 		$('input[type="color"]').spectrum({showInput: true, preferredFormat: "hex"});
 	});	
 	/* eslint-enable */
-}(jQuery.noConflict());
+}(jQuery.noConflict(), CodeMirror, SimpleMDE);

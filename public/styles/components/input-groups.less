@@ -34,6 +34,48 @@
       z-index: 3;
     }
   }
+
+  .panel{
+    margin-bottom: 0;
+    border-radius: 0;
+
+    &:first-child {
+      .border-left-radius(@border-radius-base)
+    }
+    &:last-child {
+      .border-right-radius(@border-radius-base)
+    } 
+  }
+
+  .simpleMDE {
+    .editor-toolbar {
+      border-radius: 0;
+    }
+
+    .editor-statusbar {
+      border-radius: 0;
+    }
+
+    &:first-child {
+      .editor-toolbar {
+        border-top-left-radius: @border-radius-base;
+      }
+
+      .editor-statusbar {
+        border-bottom-left-radius: @border-radius-base;
+      }
+    }
+
+    &:last-child {
+      .editor-toolbar {
+        border-top-right-radius: @border-radius-base;
+      }
+
+      .editor-statusbar {
+        border-bottom-right-radius: @border-radius-base;
+      }
+    }
+  }
 }
 
 // Sizing options
@@ -139,10 +181,17 @@
   font-size: 0;
   white-space: nowrap;
 
+  &:not(:first-child):not(:last-child) {
+    > .btn {
+      border-radius: 0;
+    }
+  }
+
   // Negative margin for spacing, position for bringing hovered/focused/actived
   // element above the siblings.
   > .btn {
     position: relative;
+
     + .btn {
       margin-left: -1px;
     }
@@ -155,17 +204,27 @@
   }
 
   // Negative margin to only have a 1px border between the two
-  &:first-child {
+  &:first-child{
     > .btn,
     > .btn-group {
       margin-right: -1px;
     }
   }
-  &:last-child {
+  &:last-child,
+  .form-control + & {
     > .btn,
     > .btn-group {
       z-index: 2;
       margin-left: -1px;
+    }
+  }
+
+  .simpleMDE + & {
+    vertical-align: top;
+
+    > .btn {
+      padding-top: 12px;
+      padding-bottom: 13px;
     }
   }
 }

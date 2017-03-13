@@ -2,13 +2,14 @@
 	label.col-sm-2.control-label= name
 	.col-sm-10
 		div
-			for v in defaultValues ? defaultValues : [null]
+			for v in values ? values : [null]
 				.array-item(duck-type='number')
 					.input-group
 						.input-group-addon
 							i.fa.fa-arrows-v(aria-hidden='true')
 						input.form-control(type='number', placeholder= name, duck-value, value= v)
 						.input-group-btn
-							button.btn.btn-danger(duck-button='delete') &times;
+							button.btn.btn-danger(duck-button='delete')
+								i.fa.fa-times(aria-hidden='true')
 		p.text-right
 			button.btn.btn-primary(duck-button='add') Add #{name}

@@ -18,7 +18,7 @@ void function initDuckFilepicker($) {
 		const $imagePickerModal = $('#ImagePickerModal');
 		const $imagePicker = $imagePickerModal.find('[duck-filepicker]');
 		const $select = $imagePickerModal.find('[duck-filepicker="select"]');
-		
+
 		$('[duck-type="image"]').on('click', (e) => {
 			e.stopPropagation();
 			e.preventDefault();

@@ -3,13 +3,14 @@
 	.col-sm-10
 		h3 Currently not to be used.
 		div
-			for v in defaultValues ? defaultValues : [null]
+			for v in values ? values : [null]
 				.array-item(duck-type='color')
 					.input-group
 						.input-group-addon
 							i.fa.fa-arrows-v(aria-hidden='true')
 						input.form-control(type='color', placeholder= name, duck-value, value= v || 'green')
 						.input-group-btn
-							button.btn.btn-danger(duck-button='delete') &times;
+							button.btn.btn-danger(duck-button='delete')
+								i.fa.fa-times(aria-hidden='true')
 		p.text-right
 			button.btn.btn-primary(duck-button='add') Add #{name}

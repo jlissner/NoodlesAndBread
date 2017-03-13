@@ -1,0 +1,7 @@
+.form-group(duck-type='select' duck-field=name)
+	label.col-sm-2.control-label= name
+	.col-sm-10
+		select.form-control(duck-value='duck-value')
+			option(value= factory && factory.Id)= factory ? 'Sibling' : 'This shouldn\'t be used like this :('
+			for _facotry in (factory && factories) ? factories : []
+				option(value= _facotry.Id)= _facotry.name

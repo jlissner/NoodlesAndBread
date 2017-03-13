@@ -1,10 +1,5 @@
 extends ../layout.pug
 
-append head
-	script(src='3rdParty/codemirror/codemirror.js')
-	script(src='3rdParty/codemirror/mode/pug/pug.js')
-	link(rel='stylesheet', href='3rdParty/codemirror/codemirror.css')
-
 block content
 	.container(style='display: flex;')
 		include nav.pug
@@ -177,6 +172,25 @@ block content
 						- name = 'List of Dates'
 						include ../robots/dateList.pug
 
+						- name = 'User'
+						include ../robots/user.pug
+
+						- name = 'List of Users'
+						include ../robots/userList.pug
+
+						- name = 'Robot'
+						- var factory = {Id: newFactoryId, name: 'This Factory'}
+						include ../robots/robot.pug
+
+						- name = 'List of Robots'
+						include ../robots/robotList.pug
+
+						- name = 'Text Editor'
+						include ../robots/wysiwyg.pug
+
+						- name = 'List of Text Editors'
+						include ../robots/wysiwygList.pug
+
 						- name = 'Checkbox'
 						include ../robots/checkbox.pug
 
@@ -185,21 +199,6 @@ block content
 
 						- name = 'Image'
 						include ../robots/image.pug
-
-						- name = 'List of Images'
-						include ../robots/imageList.pug
-
-						- name = 'User'
-						include ../robots/user.pug
-
-						- name = 'List of Users'
-						include ../robots/userList.pug
-
-						- name = 'Text Editor'
-						include ../robots/wysiwyg.pug
-
-						- name = 'List of Text Editors'
-						include ../robots/wysiwygList.pug
 
 						- name = 'Color'
 						include ../robots/color.pug
@@ -241,12 +240,12 @@ block content
 
 								.input-group
 									.input-group-btn
-										button.btn.btn-default.mr-Sm(data-file-manager='delete-start', disabled, data-icon='fa fa-times') &nbsp;Delete
+										button.btn.btn-default.mr-Sm(data-file-manager='delete-start', disabled) #[i.fa.fa-times(aria-hidden='true')] Delete
 										//button.btn.btn-default(data-file-manager='rename', disabled, data-icon='fa fa-font') &nbsp;Rename
 
 									input.form-control(type='text', data-file-manager='search', placeholder='Search...')
-									span.input-group-addon(data-icon='fa fa-search')
-
+									.input-group-addon
+										i.fa.fa-search(aria-hidden='true')
 									.input-group-btn
 										button.btn.btn-default.ml-Sm(data-file-manager='upload', data-icon='fa fa-upload') &nbsp;Upload
 							
