@@ -15,56 +15,7 @@ block content
 					button#GetImage Get Image
 
 					p#TestAPI
-						img(src='file?file=176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg&size=64x64')
-						img(src='https://s3-us-west-2.amazonaws.com/noodlesandbread/176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg')
-						
-					script.
-						const $ = jQuery;
-						
-
-
-						/* WORKING
-						const data = {pugContent: 'h1= name', locals: {name: 'Joe'}};
-						$.ajax({
-							type: 'POST',
-							url: 'https://pyr3xaxxa0.execute-api.us-west-2.amazonaws.com/prod/pug',
-							dataType: "json",
-							contentType: 'application/json',
-							data: JSON.stringify(data),
-							success: function(data) {
-								console.log(data)
-								$('#TestAPI').html(data)
-								//success stuff. data here is the response, not your original data
-							},
-							error: function(xhr, ajaxOptions, thrownError) {
-								console.error(xhr)
-								//console.error(xhr)
-								//error handling stuff
-							}
-						}); */
-
-						/* TESTING
-						$('#GetImage').on('click', (e) => {
-							e.preventDefault();
-							const img = new Image;
-
-							$.ajax({
-								type: 'GET',
-								url: '/getFile?size=' + $('#ImageSize').val(),
-								data: {
-									key: '176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg'
-								},
-								success: (data) => {
-									img.src= "data:image/png;base64," + data;
-									$('#TestAPI').html(img)
-									console.log('done')
-								},
-								error: (err) => {
-									console.error(err)
-								}
-							});
-
-						}) */
+						img(src='file?file=176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg')
 
 			h2(data-position='1') Pages
 			p.

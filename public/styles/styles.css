@@ -7124,7 +7124,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 .file-manager--content__active > * {
   pointer-events: none;
 }
-.file-manager--image {
+.file-manager--file {
   width: 300px;
   display: inline-block;
   padding: 7.5px;
@@ -7132,26 +7132,34 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
   cursor: pointer;
   border: 1px solid transparent;
 }
-.file-manager--image:hover {
+.file-manager--file:hover {
   background: #eeeeee;
 }
-.file-manager--image.file-manager--image__active {
+.file-manager--file.file-manager--file__active {
   background: #777777;
   border-color: #555555;
 }
-.image--name {
+.file--name {
   margin: 0;
   font-weight: 400;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.image--size {
+.file--size {
   text-size: .8em;
   color: #333333;
   margin: 0;
 }
-.image--content {
+.file--content {
+  text-align: center;
+}
+.file--content .fa {
+  font-size: 24px;
+  padding: 15px 30px;
+  border: 1px solid #ddd;
+}
+.file--content img {
   max-width: 100%;
 }
 .file-manager--footer {

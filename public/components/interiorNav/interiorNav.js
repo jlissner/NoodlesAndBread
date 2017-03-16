@@ -34,7 +34,8 @@ void function initInteriorNav($) {
 	function checkForActiveTabChange(e) {
 		const $wrapper = e.data.wrapper;
 		const $nodes = e.data.nodes;
-		const $allActiveNodes = $nodes.filter((i, node) => $(node).is(':visible') && $(node).offset().top <= e.data.offset);
+		const isWindow = e.data.isWindow;
+		const $allActiveNodes = $nodes.filter((i, node) => $(node).is(':visible') && $(node).offset().top <= (isWindow ? $('body').scrollTop() : e.data.offset));
 		const $activeNodes = $wrapper.find('.active');
 		const activePosition = $allActiveNodes.last().attr('data-position');
 		const currentPosition = $activeNodes.last().attr('data-position')
@@ -105,10 +106,10 @@ void function initInteriorNav($) {
 		const $nodes = $('.js-nav-nodes [data-position]');
 		const offset = userDefinedOffset || $wrapper.attr('data-interior-nav-offset') || 24;
 
-		$wrapper.find('[data-position]').on('becomeActiveNode', becomeActiveNode)
+		$wrapper.find('[data-position]').off('becomeActiveNode', becomeActiveNode).on('becomeActiveNode', becomeActiveNode)
 
-		$wrapper.find('a').on('click', {wrapper: $wrapper, nodes: $nodes, contentScrollWrap: $contentScrollWrap, content: $content, offset, isWindow}, scrollTo);
-		$contentScrollWrap.on('scroll', {wrapper: $wrapper, nodes: $nodes, offset, isWindow}, checkForActiveTabChange);
+		$wrapper.find('a').off('click', scrollTo).on('click', {wrapper: $wrapper, nodes: $nodes, contentScrollWrap: $contentScrollWrap, content: $content, offset, isWindow}, scrollTo);
+		$contentScrollWrap.off('scroll', checkForActiveTabChange).on('scroll', {wrapper: $wrapper, nodes: $nodes, offset, isWindow}, checkForActiveTabChange);
 	}
 
 	$.fn.interiorNav = function(contentWrapper, offset) {

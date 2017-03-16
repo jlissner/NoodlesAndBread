@@ -102,7 +102,7 @@
 				}
 			}
 
-			.file-manager--image {
+			.file-manager--file {
 				width: 300px;
 				display: inline-block;
 				padding: @gw-Xs;
@@ -114,26 +114,36 @@
 					background: @grey-lighter;
 				}
 				
-				&.file-manager--image__active {
+				&.file-manager--file__active {
 					background: @grey-light;
 					border-color: @grey;
 
 				}
 			}
-				.image--name {
+				.file--name {
 					margin: 0;
 					font-weight: 400;
 					white-space: nowrap;
 					text-overflow: ellipsis;
 					overflow: hidden;
 				}
-				.image--size {
+				.file--size {
 					text-size: .8em;
 					color: @grey-dark;
 					margin: 0;
 				}
-				.image--content {
-					max-width: 100%;
+				.file--content {
+					text-align: center;
+
+					.fa {
+						font-size: 24px;
+						padding: 15px 30px;
+						border: 1px solid #ddd;
+					}
+
+					img {
+						max-width: 100%;
+					}
 				}
 
 		.file-manager--footer {

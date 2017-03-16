@@ -18,7 +18,7 @@ void function initializeStickeyAddon($) {
 		const userDefinedBottom = (offset && offset.bottom) || ($elem.attr('data-stickey-bottom') ? ($($elem.attr('data-stickey-bottom')).offset().top + $scrollWrapper.scrollTop() - $elem.outerHeight(true)) : false);
 
 		return {
-			start: userDefinedTop ? $elem.position().top - userDefinedTop + $elem.outerHeight(true) : $elem.position().top,
+			start: userDefinedTop ? $elem.offset().top - userDefinedTop + $elem.outerHeight(true) : $elem.offset().top,
 			top: userDefinedTop || defaultTop,
 			bottom: userDefinedBottom || defaultBottom,
 		};
@@ -32,6 +32,7 @@ void function initializeStickeyAddon($) {
 									$wrapper.closest('[data-scroll="content-wrapper"') :
 									$(window);
 		const offset = getOffset($wrapper, $scrollWrapper, userDefinedOffset, nextStickeyElem);
+		console.log(offset)
 
 		function makeStickey() {
 			const scrollTop = $scrollWrapper.scrollTop();
@@ -66,9 +67,9 @@ void function initializeStickeyAddon($) {
 			$wrapper.stickey(userDefinedOffset, nextStickeyElem);
 		}
 
-		$scrollWrapper.on('scroll', makeStickey);
-		$wrapper.on('reInitStickey', reInitStickey);
-		$wrapper.closest('[role="tabpanel"]').on('tab-changed', reInitStickey);
+		$scrollWrapper.off('scroll', makeStickey).on('scroll', makeStickey);
+		$wrapper.off('reInitStickey', reInitStickey).on('reInitStickey', reInitStickey);
+		$wrapper.closest('[role="tabpanel"]').off('tab-changed', reInitStickey).on('tab-changed', reInitStickey);
 
 		$(window).on('resize', reInitStickey);
 	}
@@ -79,5 +80,6 @@ void function initializeStickeyAddon($) {
 		});
 	};
 
+	$('[data-function*="stickey"]').stickey();
 	$(window).on('load', () => { $('[data-function*="stickey"]').stickey(); })
 }(jQuery.noConflict())

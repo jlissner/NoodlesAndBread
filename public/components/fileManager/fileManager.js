@@ -132,25 +132,29 @@ void function initFileManager($) {
 		return `${size}b`;
 	}
 
-	function buildImage(image) {
-		const imageSize = getFileSize(image.Size);
-		const key = image.Key;
-		const date = image.LastModified;
-		const img = `
-			<div class='file-manager--image' title="${key}" data-file-date="${date}">
+	function buildFile(file, isImage) {
+		const fileSize = getFileSize(file.Size);
+		const key = file.Key;
+		const date = file.LastModified;
+		const fileHTML = `
+			<div class='file-manager--file' title="${key}" data-file-date="${date}">
 				<div class="row">
-					<div class="col-xs-4">
-						<img class="image--content" src="https://s3-us-west-2.amazonaws.com/noodlesandbread/${key}" />
+					<div class="col-xs-4 file--content">
+						${isImage ? 
+							`<img src="file?file=${key}&size=128x128" />` :
+							'<i class="fa fa-file" aria-hidden="true"></i>'
+						}
+						
 					</div>
 					<div class="col-xs-8">
-						<h3 class="image--name">${key.split('/')[key.split('/').length-1]}</h3>
-						<h4 class="image--size">${imageSize || 'unknown'}</h4>
+						<h3 class="file--name">${key.split('/')[key.split('/').length-1]}</h3>
+						<h4 class="file--size">${fileSize || 'unknown'}</h4>
 					</div>
 				</div>
 			</div>
 		`;
 
-		return img;
+		return fileHTML;
 	}
 
 	function fileUploading($uploaderSubmit) {
@@ -168,7 +172,7 @@ void function initFileManager($) {
 			$uploader.toggleClass('hidden');
 
 			if(err) {
-				$content.text('Sorry, something went wrong uploading your image.');
+				$content.text('Sorry, something went wrong uploading your file.');
 				return;
 			}
 
@@ -191,11 +195,11 @@ void function initFileManager($) {
 
 		return (e, err, data) => {
 			if (err) {
-				$content.text('Sorry, something went wrong getting the images.');
+				$content.text('Sorry, something went wrong getting the files.');
 				return;
 			}
 
-			const files = data.files || [];
+			const _files = data.files || [];
 			const folder = data.folder;
 
 			//const marker = data.marker;
@@ -213,7 +217,7 @@ void function initFileManager($) {
 
 			$content.html('');
 
-			const images = files.sort((a, b) => {
+			const files = _files.sort((a, b) => {
 				if(a.LastModified > b.LastModified) {return -1}
 				if(a.LastModified < b.LastModified) {return 1}
 				return 0;
@@ -221,14 +225,18 @@ void function initFileManager($) {
 
 			
 
-			if(!images.length) {
+			if(!files.length) {
 				$sort.addClass('hidden');
 				$content.text('There are no files in this folder, you can upload some or check one of it\'s sub-folders.');
 			} else {
 				$sort.removeClass('hidden').find('.active').removeClass('active');
 				$sort.find('[data-sort="date"]').addClass('active');
-				images.forEach((image) => {
-					$content.append(buildImage(image))
+				files.forEach((file) => {
+					const imageType = ['jpg', 'svg', 'png']
+					const fileType = file.Key.split('.').pop();
+					const isImage = imageType.indexOf(fileType) > -1;
+
+					$content.append(buildFile(file, isImage))
 				});
 			}
 
@@ -244,7 +252,7 @@ void function initFileManager($) {
 
 		const $search = e.data.search;
 		const $content = e.data.content;
-		const $files = $content.find('.file-manager--image');
+		const $files = $content.find('.file-manager--file');
 		const val = $search.val().toLowerCase();
 
 		$files.each((i, file) => {
@@ -298,9 +306,9 @@ void function initFileManager($) {
 		const $content = e.data.content;
 		const $deleteStartButton = e.data.deleteStartButton;
 
-		$targetFile.addClass('file-manager--image__active');
+		$targetFile.addClass('file-manager--file__active');
 
-		if($content.find('.file-manager--image__active').length) {
+		if($content.find('.file-manager--file__active').length) {
 			$deleteStartButton.prop('disabled', false);
 		} else {
 			$deleteStartButton.prop('disabled', true);
@@ -381,7 +389,7 @@ void function initFileManager($) {
 			const sortDirection = $sortDirection.attr('data-sort-direction');
 			const $activeSort = $sort.find('.active');
 			const reverseDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-			const $files = $content.find('.file-manager--image');
+			const $files = $content.find('.file-manager--file');
 
 			if (!sortBy) {
 				$sortDirection.attr('data-sort-direction', reverseDirection);
@@ -413,18 +421,18 @@ void function initFileManager($) {
 
 		$wrapper.on('selectFile', {content: $content, deleteStartButton: $deleteStartButton}, selectFile);
 		
-		$content.on('click', '.file-manager--image', (e) => {
+		$content.on('click', '.file-manager--file', (e) => {
 			e.stopPropagation();
 			e.preventDefault();
 
-			$wrapper.trigger('selectFile', [$(e.currentTarget), $content.find('.file-manager--image__active')]);
+			$wrapper.trigger('selectFile', [$(e.currentTarget), $content.find('.file-manager--file__active')]);
 		});
 
 		$deleteStartButton.add($deleteCancelButton).on('click', (e) => {
 			e.stopPropagation();
 			e.preventDefault();
 
-			if($content.find('.file-manager--image__active').length > 1) {
+			if($content.find('.file-manager--file__active').length > 1) {
 				$deleteGrammar.text('these')
 			} else {
 				$deleteGrammar.text('this')
@@ -437,15 +445,10 @@ void function initFileManager($) {
 			e.preventDefault();
 
 			const files = [];
-			$content.find('.file-manager--image__active').each((i, item) => {
-				const key = $(item).attr('title'); // "images/my-picture-name.jpg"
-				const fileName = key.split('.')[0]; // "images/my-picture-name"
-				const fileType = key.split('.')[1]; // "jpg"
-				const fileSizes = ['large', 'medium', 'small', 'thumb1', 'thumb2'];
-
-				fileSizes.forEach((size) => {
-					files.push({Key: `${fileName}-${size}.${fileType}`});
-				});
+			$content.find('.file-manager--file__active').each((i, item) => {
+				const key = $(item).attr('title'); // "files/my-picture-name.jpg"
+				
+				files.push({Key: key});
 			});
 
 			$deleteButton.prop('disabled', true).text('Deleting').prepend('<i class="fa fa-spin fa-spinner" aria-hidden="true"></i> ')
