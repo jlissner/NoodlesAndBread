@@ -135,16 +135,15 @@ void function initFileManager($) {
 	function buildImage(image) {
 		const imageSize = getFileSize(image.Size);
 		const key = image.Key;
-		const fileName = key.replace('-thumb2', '');
 		const date = image.LastModified;
 		const img = `
-			<div class='file-manager--image' title="${fileName}" data-file-date="${date}">
+			<div class='file-manager--image' title="${key}" data-file-date="${date}">
 				<div class="row">
 					<div class="col-xs-4">
-						<img class="image--content" src="https://s3-us-west-2.amazonaws.com/lissnerlistner.com/${key}" />
+						<img class="image--content" src="https://s3-us-west-2.amazonaws.com/noodlesandbread/${key}" />
 					</div>
 					<div class="col-xs-8">
-						<h3 class="image--name">${key.split('/')[key.split('/').length-1].replace('-thumb2', '')}</h3>
+						<h3 class="image--name">${key.split('/')[key.split('/').length-1]}</h3>
 						<h4 class="image--size">${imageSize || 'unknown'}</h4>
 					</div>
 				</div>
@@ -214,7 +213,7 @@ void function initFileManager($) {
 
 			$content.html('');
 
-			const images = files.filter((img) => img.Key.indexOf('-thumb2.') > -1).sort((a, b) => {
+			const images = files.sort((a, b) => {
 				if(a.LastModified > b.LastModified) {return -1}
 				if(a.LastModified < b.LastModified) {return 1}
 				return 0;
@@ -549,7 +548,7 @@ void function initUploader($) {
 
 		$wrapper.prop('filesToUpload', []);
 		$filesList.empty();
-		$uploadButton.text('Upload');
+		$uploadButton.text('Upload').prop('disabled', false);
 	}
 
 	function uploader(wrapper) {

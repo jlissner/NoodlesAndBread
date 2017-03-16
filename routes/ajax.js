@@ -1,5 +1,9 @@
 const express    = require('express');
 const pug        = require('pug');
+const http       = require('http');
+const gm         = require('gm').subClass({
+    imageMagick: true
+});
 const isLoggedIn = require('../middleware/isLoggedIn');
 const formidable = require('../middleware/formidable');
 const pickTable  = require('../modules/pickTable');
@@ -100,12 +104,47 @@ const router     = express.Router();
 	});
 
 //// s3 ajax calls
+	router.get('/file', (req, res) => {
+		const file = req.query.file;
+		const size = req.query.size;
+
+		s3.getFile(req.query.file, (err, data) => {
+			const imgBuf = data.Body
+			if(err) {
+				res.status(500).send(err);
+				console.error(err);
+				return;
+			}
+
+			if(size) {
+				const _size = size.split('x');
+				const width = _size[0];
+				const height = _size[1];
+
+				gm(imgBuf).resize(width, height)
+				.setFormat('jpeg')
+				.toBuffer((err, buffer) => {
+					if(err) {
+						console.error(err);
+						res.status(500).send(err);
+						return;
+					}
+
+					res.send(new Buffer(buffer));
+				});				
+			} else {
+				res.send(new Buffer(imgBuf));
+			}
+		});
+	});
+
 	router.get('/getFiles', isLoggedIn(), (req, res) => {
 		s3.getFiles((err, files, folder, subFolders, marker, nextMarker) => {
 			if(err) {
 				res.status(500).send(err);
 				return;
 			}
+
 			res.send({files, folder, subFolders, marker, nextMarker});
 		}, req.query.folder, req.query.marker, req.query.maxKeys);
 	});
@@ -118,25 +157,26 @@ const router     = express.Router();
 		const files = req.files || [];
 		const length = files.length;
 
-		function uploadImage(file) {
+
+		function uploadFile(file) {
 			const fileName = file.name.split('.');
 			const fileType = fileName.pop();
 
-			s3.uploadImage(file.path, {path: fileName.join('')}, function(err, versions, meta) {
+			s3.uploadFile(`${req.fields.filePath}${file.name}`, file, function(err, data) {
 				if (err) {
 					console.error(err);
 					res.status(500).send(err);
 
 					return;
 				} else if(files.length) {
-					uploadImage(files.shift());
+					uploadFile(files.shift());
 				} else {
 					res.send('success');
 				}
 			}, fileType, req.fields.filePath);
 		}
 
-		uploadImage(files.shift());
+		uploadFile(files.shift());
 	});
 
 	router.post('/deleteFiles', isLoggedIn(), (req, res) => {
@@ -160,8 +200,9 @@ const router     = express.Router();
 		const filePath = `views/${params.file}`;
 		const locals = params.locals
 
-		res.send(pug.compileFile(filePath)(locals));
+		res.send(pug.renderFile(filePath, locals));
 
+		return;
 		fs.readFile(filePath, (err, data) => {
 			if(err) {
 				res.status(500).send(err);
@@ -184,6 +225,25 @@ const router     = express.Router();
 		const brain = require(`../robots/${robot.name}/brain`);
 
 		res.send(pug.compileFile(`robots/${robot.name}/body.pug`)(brain(robot.data)));
+	})
+
+//// lambda calls
+	router.get('/lambda/pug', (req, res) => {
+		const options = {
+			hostname: 'https://pyr3xaxxa0.execute-api.us-west-2.amazonaws.com',
+			path: '/prod/pug',
+		};
+
+		try {
+			http.request(options, (response) => {
+				console.log(response);
+			}, (err) => {
+				console.log(err);
+			})
+		} catch(err) {
+			console.log(err)
+			next();
+		}
 	})
 
 module.exports = router;

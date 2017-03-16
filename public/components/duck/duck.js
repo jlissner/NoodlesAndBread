@@ -3,19 +3,6 @@
 void function initDuck($){
 	'use strict'
 
-	// secure ajax requests
-	const CSRF_HEADER = 'X-CSRF-Token';
-
-	function setCSRFToken(securityToken) {
-		$.ajaxPrefilter((options, _, xhr) => {
-			if (!xhr.crossDomain) {
-				xhr.setRequestHeader(CSRF_HEADER, securityToken);
-			}
-		});
-	}
-
-	setCSRFToken($('meta[name="csrf-token"]').attr('content'));
-
 	// stops propagation
 	function stopProp(e) {
 		e.stopPropagation();

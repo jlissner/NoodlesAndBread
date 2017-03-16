@@ -1,5 +1,5 @@
+const fs    = require('fs');
 const awsS3 = require('../config/s3.js');
-const Upload = require('s3-uploader');
 const s3 = {};
 
 function getSetFolders(folderName, folder, subFolders) {
@@ -25,6 +25,22 @@ function createFolderStructure(files) {
 	return folders
 };
 
+s3.getFile = (key, callback) => {
+	if(!key) {
+		console.error('A key is required to getFile');
+		callback('A key is required to getFile');
+	}
+
+	const options = {
+		Bucket: 'noodlesandbread',
+		Key: key,
+	}
+
+	awsS3.getObject(options, (err, data) => {
+		callback(err, data);
+	})
+}
+
 s3.getFiles = (callback, folder, marker, subFolders, bucketObjects) => {
 	if(!callback) {
 		console.error('A callback is required for getFiles');
@@ -35,7 +51,7 @@ s3.getFiles = (callback, folder, marker, subFolders, bucketObjects) => {
 	const _bucketObjects = bucketObjects || [];
 	const prefix = folder || ''
 	const options = {
-		Bucket: 'lissnerlistner.com',
+		Bucket: 'noodlesandbread',
 		Prefix: prefix,
 		Delimiter: '/',
 		Marker: marker,
@@ -72,61 +88,26 @@ s3.getFiles = (callback, folder, marker, subFolders, bucketObjects) => {
 	});
 }
 
-s3.uploadImage = (file, options, callback, fileType, filePath) => {
-	const extention = fileType || 'jpg'
-	const path = filePath || '';
-	const client = new Upload('lissnerlistner.com', {
-		aws: {
-			path: path,
-			region: 'us-west-2',
-			acl: 'public-read',
-			accessKeyId: process.env.AWS_S3_ID, 
-			secretAccessKey: process.env.AWS_S3_KEY,
-		},
+s3.uploadFile = (fileName, file, callback) => {
+	fs.readFile(file.path, (err, data) => {
+		if(err) {
+			callback(err);
+			return;
+		}
 
-		cleanup: {
-			versions: true,
-			original: true,
-		},
+		const params = {
+			Bucket: 'noodlesandbread', /* required */
+			Key: fileName, // file path & name
+			Body: new Buffer(data), // the file
+		};
 
-		versions: [{
-			maxHeight: 1040,
-			maxWidth: 1040,
-			format: extention,
-			suffix: '-large',
-			quality: 80,
-			awsImageExpires: 31536000,
-			awsImageMaxAge: 31536000
-		},{
-			maxWidth: 780,
-			format: extention,
-			aspect: '3:2!h',
-			suffix: '-medium'
-		},{
-			maxWidth: 320,
-			format: extention,
-			aspect: '16:9!h',
-			suffix: '-small'
-		},{
-			maxHeight: 100,
-			format: extention,
-			aspect: '1:1',
-			suffix: '-thumb1'
-		},{
-			maxHeight: 250,
-			maxWidth: 250,
-			format: extention,
-			aspect: '1:1',
-			suffix: '-thumb2'
-		}],
+		awsS3.putObject(params, callback);
 	});
-
-	client.upload(file, options, callback);
 }
 
 s3.deleteFiles = (files, callback) => {
 	const options = {
-		Bucket: 'lissnerlistner.com',
+		Bucket: 'noodlesandbread',
 		Delete: {
 			Objects: files,
 		},

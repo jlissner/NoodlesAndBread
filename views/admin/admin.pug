@@ -4,223 +4,269 @@ block content
 	.container(style='display: flex;')
 		include nav.pug
 
-		#NavContentWrapper
-			.js-nav-nodes(style='padding: 15px 30px 15px 15px;')
+		.js-nav-nodes(style='padding: 15px 30px 15px 15px;')
 
-				h2(style='margin-top: 0;' data-position='0') Site
+			h2(style='margin-top: 0;' data-position='0') Site
 
-				.panel.panel-default(data-position='0.0')
-					.panel-heading: h2.panel-title Manage Site Settings
-					.panel-body
-						p.
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-							tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-							quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-							consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-							cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-							proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			.panel.panel-default(data-position='0.0')
+				.panel-heading: h2.panel-title Manage Site Settings
+				.panel-body
+					input#ImageSize
+					button#GetImage Get Image
 
-				h2(data-position='1') Pages
-				p.
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-				h2(data-position='2') Factories
-				- var newFactoryId = uuid();
-				if user && user.isAdmin
-					.alert.alert-danger
-						p: strong To Do
-						h6 Primary
-						ul
-							li On create, clear name and attributes
-							li On create, give user a proper notification
-						h6 Secondary
-						ul
-							li Default value
-							li Is Editable
-							li Radio
-							li List of Boolean
-
-				.panel.panel-primary(data-position='2.0', robot-factory='factory')
-					.panel-heading: h3.panel-title Create a Robot Factory
-					.panel-body
-						p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
-
-						.form-group
-							label These Robots will be a type of:
-								input.form-control(type='text', placeholder='Bending Unit', factory-id= newFactoryId, robot-factory='name')
-
-						p Now you can dictate what your #[strong Robots] can know.
-
-					table.table
-						thead
-							tr
-								th Attribute
-								th
-								th Type
-								th
-								th
-								th
-						tbody(robot-factory='attributes')
-							tr(robot-factory='attribute')
-								td
-									input.form-control(type='text', placeholder='Favorite Alcohol', robot-factory='attribute-name')
-								td
-									//button.btn.btn-default 
-									.checkbox
-										label
-											input(type='checkbox', robot-factory='attribute-is-list')
-											| Is List of
-								td
-									select.form-control(robot-factory='attribute-type')
-										option(value='String') A little Text
-										option(value='Wysiwyg') A lot of Text
-										option Number
-										option(value='Bool') Boolean (true/false)
-										option Image
-										option(value='Robot') Another Robot
-										option User
-										option Date
-								td
-								td
-									select.form-control(disabled, robot-factory='attribute-robot')
-										option(value= newFactoryId) Sibling Robots!
-								td(style='padding-top: 12px')
-									button.btn.btn-danger(robot-factory='attribute-delete') &times;
-					.panel-body.text-right
-						button.btn.btn-primary(robot-factory='attribute-add') Add Some Robot Knowledge
+					p#TestAPI
+						img(src='file?file=176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg&size=64x64')
+						img(src='https://s3-us-west-2.amazonaws.com/noodlesandbread/176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg')
+						
+					script.
+						const $ = jQuery;
+						
 
 
-					//.row
-						.col-xs-6.col-xs-push-3
-							style.
-								.robot--head {
-									height: 100px;
-									width: 50%;
-									margin: 0 auto;
-									position: relative;
-									background: grey;
+						/* WORKING
+						const data = {pugContent: 'h1= name', locals: {name: 'Joe'}};
+						$.ajax({
+							type: 'POST',
+							url: 'https://pyr3xaxxa0.execute-api.us-west-2.amazonaws.com/prod/pug',
+							dataType: "json",
+							contentType: 'application/json',
+							data: JSON.stringify(data),
+							success: function(data) {
+								console.log(data)
+								$('#TestAPI').html(data)
+								//success stuff. data here is the response, not your original data
+							},
+							error: function(xhr, ajaxOptions, thrownError) {
+								console.error(xhr)
+								//console.error(xhr)
+								//error handling stuff
+							}
+						}); */
+
+						/* TESTING
+						$('#GetImage').on('click', (e) => {
+							e.preventDefault();
+							const img = new Image;
+
+							$.ajax({
+								type: 'GET',
+								url: '/getFile?size=' + $('#ImageSize').val(),
+								data: {
+									key: '176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg'
+								},
+								success: (data) => {
+									img.src= "data:image/png;base64," + data;
+									$('#TestAPI').html(img)
+									console.log('done')
+								},
+								error: (err) => {
+									console.error(err)
 								}
-								.robot--body {
-									border: 15px solid grey;
-									padding: 15px;
-									background: lightgrey;
-								}
+							});
 
-								.robot--feet {
-									height: 200px;
-									width: 50%;
-									margin: 0 auto;
-									position: relative;
-								}
+						}) */
 
-								.robot--feet:before,
-								.robot--feet:after {
-									content: ' ';
-									background: grey;
-									position: absolute;
-									top: 0;
-									bottom: 0;
-									width: 50px;
-								}
-								.robot--feet:before {
-									left: 0;
-								}
+			h2(data-position='1') Pages
+			p.
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-								.robot--feet:after {
-									right: 0;
-								}
+			h2(data-position='2') Factories
+			- var newFactoryId = uuid();
+			if user && user.isAdmin
+				.alert.alert-danger
+					p: strong To Do
+					h6 Primary
+					ul
+						li On create, clear name and attributes
+						li On create, give user a proper notification
+					h6 Secondary
+					ul
+						li Default value
+						li Is Editable
+						li Radio
+						li List of Boolean
+
+			.panel.panel-primary(data-position='2.0', robot-factory='factory')
+				.panel-heading: h3.panel-title Create a Robot Factory
+				.panel-body
+					p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
+
+					.form-group
+						label These Robots will be a type of:
+							input.form-control(type='text', placeholder='Bending Unit', factory-id= newFactoryId, robot-factory='name')
+
+					p Now you can dictate what your #[strong Robots] can know.
+
+				table.table
+					thead
+						tr
+							th Attribute
+							th
+							th Type
+							th
+							th
+							th
+					tbody(robot-factory='attributes')
+						tr(robot-factory='attribute')
+							td
+								input.form-control(type='text', placeholder='Favorite Alcohol', robot-factory='attribute-name')
+							td
+								//button.btn.btn-default 
+								.checkbox
+									label
+										input(type='checkbox', robot-factory='attribute-is-list')
+										| Is List of
+							td
+								select.form-control(robot-factory='attribute-type')
+									option(value='String') A little Text
+									option(value='Wysiwyg') A lot of Text
+									option Number
+									option(value='Bool') Boolean (true/false)
+									option Image
+									option(value='Robot') Another Robot
+									option User
+									option Date
+							td
+							td
+								select.form-control(disabled, robot-factory='attribute-robot')
+									option(value= newFactoryId) Sibling Robots!
+							td(style='padding-top: 12px')
+								button.btn.btn-danger(robot-factory='attribute-delete') &times;
+				.panel-body.text-right
+					button.btn.btn-primary(robot-factory='attribute-add') Add Some Robot Knowledge
 
 
-							.robot
-								.robot--head
-								.robot--body
-									p.
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-										consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-										cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-										proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-								.robot--feet
+				//.row
+					.col-xs-6.col-xs-push-3
+						style.
+							.robot--head {
+								height: 100px;
+								width: 50%;
+								margin: 0 auto;
+								position: relative;
+								background: grey;
+							}
+							.robot--body {
+								border: 15px solid grey;
+								padding: 15px;
+								background: lightgrey;
+							}
 
-					.panel-footer.text-right
-						button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
+							.robot--feet {
+								height: 200px;
+								width: 50%;
+								margin: 0 auto;
+								position: relative;
+							}
 
-				.panel.panel-primary(data-position='2.1')
-					.panel-heading: h3.panel-title Preview
-					.panel-body.form-horizontal(duck-table='test', duck-function='add', duck-key='id')
-						- var name = 'String', defaultValue, defaultValues;
-						include ../robots/string.pug
+							.robot--feet:before,
+							.robot--feet:after {
+								content: ' ';
+								background: grey;
+								position: absolute;
+								top: 0;
+								bottom: 0;
+								width: 50px;
+							}
+							.robot--feet:before {
+								left: 0;
+							}
 
-						- name = 'List of Strings'
-						include ../robots/stringList.pug
+							.robot--feet:after {
+								right: 0;
+							}
 
-						- name = 'Number'
-						include ../robots/number.pug
 
-						- name = 'List of Numbers'
-						include ../robots/numberList.pug
+						.robot
+							.robot--head
+							.robot--body
+								p.
+									Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+									tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+									quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+									consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+									cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+									proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+							.robot--feet
 
-						- name = 'Date'
-						include ../robots/date.pug
+				.panel-footer.text-right
+					button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
 
-						- name = 'List of Dates'
-						include ../robots/dateList.pug
+			.panel.panel-primary(data-position='2.1')
+				.panel-heading: h3.panel-title Preview
+				.panel-body.form-horizontal(duck-table='test', duck-function='add', duck-key='id')
+					- var name = 'String', defaultValue, defaultValues;
+					include ../robots/string.pug
 
-						- name = 'User'
-						include ../robots/user.pug
+					- name = 'List of Strings'
+					include ../robots/stringList.pug
 
-						- name = 'List of Users'
-						include ../robots/userList.pug
+					- name = 'Number'
+					include ../robots/number.pug
 
-						- name = 'Robot'
-						- var factory = {Id: newFactoryId, name: 'This Factory'}
-						include ../robots/robot.pug
+					- name = 'List of Numbers'
+					include ../robots/numberList.pug
 
-						- name = 'List of Robots'
-						include ../robots/robotList.pug
+					- name = 'Date'
+					include ../robots/date.pug
 
-						- name = 'Text Editor'
-						include ../robots/wysiwyg.pug
+					- name = 'List of Dates'
+					include ../robots/dateList.pug
 
-						- name = 'List of Text Editors'
-						include ../robots/wysiwygList.pug
+					- name = 'User'
+					include ../robots/user.pug
 
-						- name = 'Checkbox'
-						include ../robots/checkbox.pug
+					- name = 'List of Users'
+					include ../robots/userList.pug
 
-						- var radioOptions = ['Radio 1', 'Radio 2', 'Radio 3'];name = 'radio';
-						include ../robots/radio.pug
+					- name = 'Robot'
+					- var factory = {Id: newFactoryId, name: 'This Factory'}
+					include ../robots/robot.pug
 
-						- name = 'Image'
-						include ../robots/image.pug
+					- name = 'List of Robots'
+					include ../robots/robotList.pug
 
-						- name = 'Color'
-						include ../robots/color.pug
+					- name = 'Text Editor'
+					include ../robots/wysiwyg.pug
 
-				h2(data-position='3') Bodies
-				p.
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					- name = 'List of Text Editors'
+					include ../robots/wysiwygList.pug
 
-				h2(data-position='4') Robots
-				p.
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				
+					- name = 'Checkbox'
+					include ../robots/checkbox.pug
+
+					- var radioOptions = ['Radio 1', 'Radio 2', 'Radio 3'];name = 'radio';
+					include ../robots/radio.pug
+
+					- name = 'Image'
+					include ../robots/image.pug
+
+					- name = 'Color'
+					include ../robots/color.pug
+
+			h2(data-position='3') Bodies
+			p.
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+			h2(data-position='4') Robots
+			p.
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			
 
 	script.
 		void function initRobot($, duck){
