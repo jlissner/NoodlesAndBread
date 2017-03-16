@@ -32,7 +32,6 @@ void function initializeStickeyAddon($) {
 									$wrapper.closest('[data-scroll="content-wrapper"') :
 									$(window);
 		const offset = getOffset($wrapper, $scrollWrapper, userDefinedOffset, nextStickeyElem);
-		console.log(offset)
 
 		function makeStickey() {
 			const scrollTop = $scrollWrapper.scrollTop();
