@@ -1,13 +1,13 @@
 .form-group(duck-type='array', duck-field= name)
-	label.col-sm-2.control-label= name
+	label.col-sm-2.control-label= title || name
 	.col-sm-10
 		div
 			for v in values ? values : [null]
 				.array-item(duck-type='date')
 					.input-group
-						.input-group-addon
+						.input-group-addon(data-sort='handle')
 							i.fa.fa-arrows-v(aria-hidden='true')
-						input.form-control.bs-date(type='date', placeholder= name, duck-value, value= v || new Date())
+						input.form-control.bs-date(type='date', placeholder= name, duck-value, value= v || new Date(), required= required)
 						.input-group-addon
 							i.fa.fa-calendar(aria-hidden='true')
 						.input-group-btn

@@ -1839,6 +1839,10 @@ input[type="search"] {
   font-weight: normal;
   cursor: pointer;
 }
+.radio label.btn,
+.checkbox label.btn {
+  padding-left: 30px;
+}
 .radio input[type="radio"],
 .radio-inline input[type="radio"],
 .checkbox input[type="checkbox"],
@@ -3196,6 +3200,13 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .simpleMDE + .input-group-btn > .btn {
   padding-top: 12px;
   padding-bottom: 13px;
+}
+.panel + .input-group-btn {
+  vertical-align: top;
+}
+.panel + .input-group-btn > .btn {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .nav {
   margin-bottom: 0;
@@ -4690,6 +4701,12 @@ button.list-group-item-danger.active:focus {
 .panel-title > small > a,
 .panel-title > .small > a {
   color: inherit;
+}
+.panel-title .btn,
+.panel-title a[role='button'] {
+  display: block;
+  padding: 15px;
+  margin: -15px;
 }
 .panel-footer {
   padding: 10px 15px;
@@ -6618,6 +6635,431 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
   border-color: #ccc;
   border-radius: 0 0 4px 4px;
 }
+[data-function*="codemirror"] {
+  min-height: 300px;
+}
+td[data-function*="codemirror"] {
+  height: 300px;
+  padding: 0;
+  position: static;
+}
+td[data-function*="codemirror"] .codemirror {
+  padding: 0;
+  border: none;
+}
+#Noodles .m-0 {
+  margin: 0;
+}
+#Noodles .mt-0 {
+  margin-top: 0;
+}
+#Noodles .mb-0 {
+  margin-bottom: 0;
+}
+#Noodles .ml-0 {
+  margin-left: 0;
+}
+#Noodles .mr-0 {
+  margin-right: 0;
+}
+#Noodles .m-Sm {
+  margin: 15px;
+}
+#Noodles .mt-Sm {
+  margin-top: 15px;
+}
+#Noodles .mb-Sm {
+  margin-bottom: 15px;
+}
+#Noodles .ml-Sm {
+  margin-left: 15px;
+}
+#Noodles .mr-Sm {
+  margin-right: 15px;
+}
+#Noodles .m-NegSm {
+  margin: -15px;
+}
+#Noodles .mt-NegSm {
+  margin-top: -15px;
+}
+#Noodles .mb-NegSm {
+  margin-bottom: -15px;
+}
+#Noodles .ml-NegSm {
+  margin-left: -15px;
+}
+#Noodles .mr-NegSm {
+  margin-right: -15px;
+}
+#Noodles .m-Md {
+  margin: 30px;
+}
+#Noodles .mt-Md {
+  margin-top: 30px;
+}
+#Noodles .mb-Md {
+  margin-bottom: 30px;
+}
+#Noodles .ml-Md {
+  margin-left: 30px;
+}
+#Noodles .mr-Md {
+  margin-right: 30px;
+}
+#Noodles .m-Lg {
+  margin: 45px;
+}
+#Noodles .mt-Lg {
+  margin-top: 45px;
+}
+#Noodles .mb-Lg {
+  margin-bottom: 45px;
+}
+#Noodles .ml-Lg {
+  margin-left: 45px;
+}
+#Noodles .mr-Lg {
+  margin-right: 45px;
+}
+@media (min-width: 768px) {
+  #Noodles .m-0--sm {
+    margin: 0;
+  }
+  #Noodles .mt-0--sm {
+    margin-top: 0;
+  }
+  #Noodles .mb-0--sm {
+    margin-bottom: 0;
+  }
+  #Noodles .ml-0--sm {
+    margin-left: 0;
+  }
+  #Noodles .mr-0--sm {
+    margin-right: 0;
+  }
+  #Noodles .m-Sm--sm {
+    margin: 15px;
+  }
+  #Noodles .mt-Sm--sm {
+    margin-top: 15px;
+  }
+  #Noodles .mb-Sm--sm {
+    margin-bottom: 15px;
+  }
+  #Noodles .ml-Sm--sm {
+    margin-left: 15px;
+  }
+  #Noodles .mr-Sm--sm {
+    margin-right: 15px;
+  }
+  #Noodles .m-NegSm--sm {
+    margin: -15px;
+  }
+  #Noodles .mt-NegSm--sm {
+    margin-top: -15px;
+  }
+  #Noodles .mb-NegSm--sm {
+    margin-bottom: -15px;
+  }
+  #Noodles .ml-NegSm--sm {
+    margin-left: -15px;
+  }
+  #Noodles .mr-NegSm--sm {
+    margin-right: -15px;
+  }
+  #Noodles .m-Md--sm {
+    margin: 30px;
+  }
+  #Noodles .mt-Md--sm {
+    margin-top: 30px;
+  }
+  #Noodles .mb-Md--sm {
+    margin-bottom: 30px;
+  }
+  #Noodles .ml-Md--sm {
+    margin-left: 30px;
+  }
+  #Noodles .mr-Md--sm {
+    margin-right: 30px;
+  }
+  #Noodles .m-Lg--sm {
+    margin: 45px;
+  }
+  #Noodles .mt-Lg--sm {
+    margin-top: 45px;
+  }
+  #Noodles .mb-Lg--sm {
+    margin-bottom: 45px;
+  }
+  #Noodles .ml-Lg--sm {
+    margin-left: 45px;
+  }
+  #Noodles .mr-Lg--sm {
+    margin-right: 45px;
+  }
+}
+@media (min-width: 1200px) {
+  #Noodles .m-0--md {
+    margin: 0;
+  }
+  #Noodles .mt-0--md {
+    margin-top: 0;
+  }
+  #Noodles .mb-0--md {
+    margin-bottom: 0;
+  }
+  #Noodles .ml-0--md {
+    margin-left: 0;
+  }
+  #Noodles .mr-0--md {
+    margin-right: 0;
+  }
+  #Noodles .m-Sm--md {
+    margin: 15px;
+  }
+  #Noodles .mt-Sm--md {
+    margin-top: 15px;
+  }
+  #Noodles .mb-Sm--md {
+    margin-bottom: 15px;
+  }
+  #Noodles .ml-Sm--md {
+    margin-left: 15px;
+  }
+  #Noodles .mr-Sm--md {
+    margin-right: 15px;
+  }
+  #Noodles .m-NegSm--md {
+    margin: -15px;
+  }
+  #Noodles .mt-NegSm--md {
+    margin-top: -15px;
+  }
+  #Noodles .mb-NegSm--md {
+    margin-bottom: -15px;
+  }
+  #Noodles .ml-NegSm--md {
+    margin-left: -15px;
+  }
+  #Noodles .mr-NegSm--md {
+    margin-right: -15px;
+  }
+  #Noodles .m-Md--md {
+    margin: 30px;
+  }
+  #Noodles .mt-Md--md {
+    margin-top: 30px;
+  }
+  #Noodles .mb-Md--md {
+    margin-bottom: 30px;
+  }
+  #Noodles .ml-Md--md {
+    margin-left: 30px;
+  }
+  #Noodles .mr-Md--md {
+    margin-right: 30px;
+  }
+  #Noodles .m-Lg--md {
+    margin: 45px;
+  }
+  #Noodles .mt-Lg--md {
+    margin-top: 45px;
+  }
+  #Noodles .mb-Lg--md {
+    margin-bottom: 45px;
+  }
+  #Noodles .ml-Lg--md {
+    margin-left: 45px;
+  }
+  #Noodles .mr-Lg--md {
+    margin-right: 45px;
+  }
+}
+#Noodles .p-0 {
+  padding: 0;
+}
+#Noodles .pt-0 {
+  padding-top: 0;
+}
+#Noodles .pb-0 {
+  padding-bottom: 0;
+}
+#Noodles .pl-0 {
+  padding-left: 0;
+}
+#Noodles .pr-0 {
+  padding-right: 0;
+}
+#Noodles .p-Sm {
+  padding: 15px;
+}
+#Noodles .pt-Sm {
+  padding-top: 15px;
+}
+#Noodles .pb-Sm {
+  padding-bottom: 15px;
+}
+#Noodles .pl-Sm {
+  padding-left: 15px;
+}
+#Noodles .pr-Sm {
+  padding-right: 15px;
+}
+#Noodles .p-Md {
+  padding: 30px;
+}
+#Noodles .pt-Md {
+  padding-top: 30px;
+}
+#Noodles .pb-Md {
+  padding-bottom: 30px;
+}
+#Noodles .pl-Md {
+  padding-left: 30px;
+}
+#Noodles .pr-Md {
+  padding-right: 30px;
+}
+#Noodles .p-Lg {
+  padding: 45px;
+}
+#Noodles .pt-Lg {
+  padding-top: 45px;
+}
+#Noodles .pb-Lg {
+  padding-bottom: 45px;
+}
+#Noodles .pl-Lg {
+  padding-left: 45px;
+}
+#Noodles .pr-Lg {
+  padding-right: 45px;
+}
+@media (min-width: 768px) {
+  #Noodles .p-0--sm {
+    padding: 0;
+  }
+  #Noodles .pt-0--sm {
+    padding-top: 0;
+  }
+  #Noodles .pb-0--sm {
+    padding-bottom: 0;
+  }
+  #Noodles .pl-0--sm {
+    padding-left: 0;
+  }
+  #Noodles .pr-0--sm {
+    padding-right: 0;
+  }
+  #Noodles .p-Sm--sm {
+    padding: 15px;
+  }
+  #Noodles .pt-Sm--sm {
+    padding-top: 15px;
+  }
+  #Noodles .pb-Sm--sm {
+    padding-bottom: 15px;
+  }
+  #Noodles .pl-Sm--sm {
+    padding-left: 15px;
+  }
+  #Noodles .pr-Sm--sm {
+    padding-right: 15px;
+  }
+  #Noodles .p-Md--sm {
+    padding: 30px;
+  }
+  #Noodles .pt-Md--sm {
+    padding-top: 30px;
+  }
+  #Noodles .pb-Md--sm {
+    padding-bottom: 30px;
+  }
+  #Noodles .pl-Md--sm {
+    padding-left: 30px;
+  }
+  #Noodles .pr-Md--sm {
+    padding-right: 30px;
+  }
+  #Noodles .p-Lg--sm {
+    padding: 45px;
+  }
+  #Noodles .pt-Lg--sm {
+    padding-top: 45px;
+  }
+  #Noodles .pb-Lg--sm {
+    padding-bottom: 45px;
+  }
+  #Noodles .pl-Lg--sm {
+    padding-left: 45px;
+  }
+  #Noodles .pr-Lg--sm {
+    padding-right: 45px;
+  }
+}
+@media (min-width: 1200px) {
+  #Noodles .p-0--md {
+    padding: 0;
+  }
+  #Noodles .pt-0--md {
+    padding-top: 0;
+  }
+  #Noodles .pb-0--md {
+    padding-bottom: 0;
+  }
+  #Noodles .pl-0--md {
+    padding-left: 0;
+  }
+  #Noodles .pr-0--md {
+    padding-right: 0;
+  }
+  #Noodles .p-Sm--md {
+    padding: 15px;
+  }
+  #Noodles .pt-Sm--md {
+    padding-top: 15px;
+  }
+  #Noodles .pb-Sm--md {
+    padding-bottom: 15px;
+  }
+  #Noodles .pl-Sm--md {
+    padding-left: 15px;
+  }
+  #Noodles .pr-Sm--md {
+    padding-right: 15px;
+  }
+  #Noodles .p-Md--md {
+    padding: 30px;
+  }
+  #Noodles .pt-Md--md {
+    padding-top: 30px;
+  }
+  #Noodles .pb-Md--md {
+    padding-bottom: 30px;
+  }
+  #Noodles .pl-Md--md {
+    padding-left: 30px;
+  }
+  #Noodles .pr-Md--md {
+    padding-right: 30px;
+  }
+  #Noodles .p-Lg--md {
+    padding: 45px;
+  }
+  #Noodles .pt-Lg--md {
+    padding-top: 45px;
+  }
+  #Noodles .pb-Lg--md {
+    padding-bottom: 45px;
+  }
+  #Noodles .pl-Lg--md {
+    padding-left: 45px;
+  }
+  #Noodles .pr-Lg--md {
+    padding-right: 45px;
+  }
+}
 @-ms-viewport {
   width: device-width;
 }
@@ -6922,16 +7364,19 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 }
 [data-function='accordion'] > [role='tab'] {
   cursor: pointer;
-  margin: 0;
-  padding: 15px;
 }
 [data-function='accordion'] > [role='tab'] .fa {
   -webkit-transition: all 0.27s ease-out;
   transition: all 0.27s ease-out;
   margin-right: 15px;
 }
-[data-function='accordion'] > [role='tabpanel'] {
-  padding: 0 15px 15px;
+[data-function='accordion'] > [role='tabpanel']:before,
+[data-function='accordion'] > [role='tabpanel']:after {
+  content: " ";
+  display: table;
+}
+[data-function='accordion'] > [role='tabpanel']:after {
+  clear: both;
 }
 [data-function='banner'] {
   position: relative;
@@ -7467,6 +7912,13 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
   border: 1px dashed grey;
   background: white;
   z-index: 1;
+}
+[data-function*='sort'] [data-sort='handle'] {
+  -webkit-transition: background .05s linear;
+  transition: background .05s linear;
+}
+[data-function*='sort'] [data-sort='handle']:hover {
+  background: #ccc;
 }
 [data-function*='stickey'] {
   position: relative;

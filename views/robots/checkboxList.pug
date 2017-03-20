@@ -1,0 +1,8 @@
+.form-group(duck-type='array', duck-field= name)
+	label.col-sm-2.control-label= title || name
+	.col-sm-10
+		for option, i in options ? options : []
+			.checkbox(duck-type='bool')
+				label
+					input(type='checkbox', checked= value ? value === option : i === 0, name= name, required= required)
+					| #{option}

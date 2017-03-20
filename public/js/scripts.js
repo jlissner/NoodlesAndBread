@@ -99,18 +99,55 @@ void function initSite($, CodeMirror, SimpleMDE){
 			$simpleMDE.prop('simpleMDE', () => _simpleMDE);
 		});
 
-
 		// init 3rd Party Elements
-		$('.codemirror').each((i, codemirror) => {
+		$('[data-function*="codemirror"]').each((i, codemirror) => {
 			const $codemirror = $(codemirror);
+			const val = $codemirror.text();
+			$codemirror.text('');
+			const $preview = $codemirror.parent().find('[data-codemirror="preview"]');
 			const _codemirror = CodeMirror(codemirror, {
 					smartIndent: true,
 					indentWithTabs: true,
 					lineNumbers: true,
-					mode: $codemirror.attr('data-mode') || 'pug'
+					mode: $codemirror.attr('data-mode') || 'pug',
+					value: val,
 			});
 
+
+
+			if(!$codemirror.is(':visible')) {
+				const refresh = setInterval(() => {
+					if($codemirror.is(':visible')) {
+						_codemirror.refresh();
+						clearTimeout(refresh);
+					}
+				}, 250);
+			}
+
 			$codemirror.prop('codemirror', () => _codemirror);
+
+			if($preview.length) {
+				let doPreview;
+
+				$codemirror.on('input', (e) => {
+					e.stopPropagation();
+					e.preventDefault();
+
+					clearTimeout(doPreview);
+					doPreview = setTimeout(() => {
+						$.ajax({
+							url: '/renderPug',
+							data: {pug: $codemirror.prop('codemirror').getValue(), locals: {}},
+							success: (data) => {
+								$preview.html(data);
+							},
+						});
+					}, 1000)
+					//if()
+
+					
+				})
+			}
 		});
 
 		$('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});

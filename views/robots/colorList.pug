@@ -1,14 +1,14 @@
 .form-group(duck-type='array', duck-field= name)
-	label.col-sm-2.control-label= name
+	label.col-sm-2.control-label= title || name
 	.col-sm-10
 		h3 Currently not to be used.
 		div
 			for v in values ? values : [null]
 				.array-item(duck-type='color')
 					.input-group
-						.input-group-addon
+						.input-group-addon(data-sort='handle')
 							i.fa.fa-arrows-v(aria-hidden='true')
-						input.form-control(type='color', placeholder= name, duck-value, value= v || 'green')
+						input.form-control(type='color', placeholder= name, duck-value, value= v || 'green', required= required)
 						.input-group-btn
 							button.btn.btn-danger(duck-button='delete')
 								i.fa.fa-times(aria-hidden='true')

@@ -21,6 +21,7 @@ const User             = require('./schemas/user');
 const RobotFactory     = require('./schemas/robotFactory');
 const RobotBody        = require('./schemas/robotBody');
 const Robot            = require('./schemas/robot');
+const Site             = require('./schemas/site');
 const Page             = require('./schemas/page');
 
 const fs               = require('fs');
@@ -96,6 +97,7 @@ app.use(
     getUser, // get the user
     globalLocals, // set variables and functions to be used on all views, mainly helper functions
     User.getCached(), // get/set cache of all tables
+    Site.getCached(),
     Page.getCached(),
     RobotFactory.getCached(),
     RobotBody.getCached(),

@@ -3,13 +3,13 @@ html
 	block head
 
 	body#Noodles
+		include shared/flash.pug
+
 		header.site-header
 			block header
 				div(robot-home="header")
 					include shared/header.pug
 		main.site-main
-			include shared/flash.pug
-
 			block content
 
 		footer.site-footer

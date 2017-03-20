@@ -5,26 +5,148 @@ block content
 		include nav.pug
 
 		.js-nav-nodes(style='padding: 15px 30px 15px 15px;')
+			h2(data-position='0') Site
+			.panel.panel-default(data-position='0.0', duck-table='Sites', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= site._Id)
+				.panel-heading: h3.panel-title Settings
+				.panel-body.form-horizontal
+					- var name = 'name', title = 'Name', value = site.name;
+					include ../robots/string.pug
 
-			h2(style='margin-top: 0;' data-position='0') Site
+					- name = 'domain', value = site.domain, title= 'Domain (url)';
+					include ../robots/string.pug
 
-			.panel.panel-default(data-position='0.0')
-				.panel-heading: h2.panel-title Manage Site Settings
-				.panel-body
-					input#ImageSize
-					button#GetImage Get Image
+					- name = 'title'; title = 'Title'
+					include ../robots/string.pug
+					//include ../robots/stringList.pug
 
-					p#TestAPI
-						img(src='file?file=176ec591-d52a-4100-8646-31601c72611d/custom-guides.jpg')
+					- name = 'description'; title = 'Description';
+					include ../robots/string.pug
+					//include ../robots/number.pug
+
+					.form-group(duck-field='scripts', duck-type='array')
+						label.col-sm-2.control-label Scripts #[br] (3rd Party)
+						.col-sm-10
+							div
+								for script in site.scripts ? site.scripts : [{}]
+									.array-item(duck-type='object')
+										.input-group
+											.input-group-addon(data-sort='handle')
+												i.fa.fa-arrows-v(aria-hidden='true')
+											.panel.panel-default(data-function='accordion')
+												.panel-heading(role='tab', aria-expanded='false')= `${script.name || script.src || 'New Script'}${script.isDisabled ? ' ----- (disabled)' : ''}`
+												.panel-body(role='tabpanel', aria-hidden='true')
+													- name = 'name'; title='Name'; value = script.name;
+													include ../robots/string.pug
+
+													- name = 'src'; title='Source'; value = script.src; var required = true;
+													include ../robots/string.pug
+													- required = false; title = null;
+
+													.form-group
+														.col-sm-10.col-sm-push-2
+															.checkbox(duck-type='bool', duck-field='isDisabled')
+																label.btn.btn-danger
+																	input(type='checkbox', duck-value, checked= script.isDisabled)
+																	| Disable
+											.input-group-btn
+												button.btn.btn-danger(duck-button='delete')
+													i.fa.fa-times(aria-hidden='true')
+							p.text-right
+								button.btn.btn-primary(duck-button='add') Add Script
+
+					.form-group(duck-field='styles', duck-type='array')
+						label.col-sm-2.control-label Styles #[br] (3rd Party)
+						.col-sm-10
+							div
+								for style in site.styles ? site.styles : [{}]
+									.array-item(duck-type='object')
+										.input-group
+											.input-group-addon(data-sort='handle')
+												i.fa.fa-arrows-v(aria-hidden='true')
+											.panel.panel-default(data-function='accordion')
+												.panel-heading(role='tab', aria-expanded='false')= `${style.name || style.src || 'New style'}${style.isDisabled ? ' ----- (disabled)' : ''}`
+												.panel-body(role='tabpanel', aria-hidden='true')
+													- name = 'name'; title='Name'; value = style.name;
+													include ../robots/string.pug
+
+													- name = 'src'; title='Source'; value = style.src; var required = true;
+													include ../robots/string.pug
+													- required = false; title = null;
+
+													.form-group
+														.col-sm-10.col-sm-push-2
+															.checkbox(duck-type='bool', duck-field='isDisabled')
+																label.btn.btn-danger
+																	input(type='checkbox', duck-value, checked= style.isDisabled)
+																	| Disable
+											.input-group-btn
+												button.btn.btn-danger(duck-button='delete')
+													i.fa.fa-times(aria-hidden='true')
+							p.text-right
+								button.btn.btn-primary(duck-button='add') Add Style
+
+					.alert.alert-danger(style='margin-bottom: 0;')
+						h3(style='margin-top: 0;') To Do
+						ul
+							li Theme CRUD
+							li Theme Select
+				.panel-footer
+					.text-right
+						button.btn.btn-success(duck-button='submit') Save
+
+			h3(data-position='0.1') Layouts
+			div(data-function='accordion', duck-table='Sites', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= site._Id)
+				div(duck-type='array', duck-field='layouts')
+					div
+						for layout, i in site.layouts ? site.layouts : [{}]
+							.array-item(duck-type='object')
+								.input-group
+									.input-group-addon(data-sort='handle')
+										i.fa.fa-arrows-v(aria-hidden='true')
+									.panel.panel-default(data-function='accordion')
+										.panel-heading(role='tab', aria-expanded='false')= layout.name || 'New Layout'
+										div(role='tabpanel', aria-hidden='true')
+											.panel-body
+												.form-horizontal
+													- name = 'name'; value = layout.name; title = 'Name';
+													include ../robots/string.pug
+
+												table.table.table-bordered.mb-0
+													thead
+														tr
+															th.col-xs-6 Body
+															th.col-xs-6 Preview
+													tbody
+														tr(duck-field="pug", duck-type='code')
+															td.p-0(data-function='codemirror')= layout.pug
+															td: div(data-codemirror='preview')
+											.panel-footer.text-right
+												button.btn.btn-success(duck-button='submit') Save
+									.input-group-btn
+										button.btn.btn-danger(duck-button='delete')
+											i.fa.fa-times(aria-hidden='true')
+					p.text-right
+						button.btn.btn-primary(duck-button='add') Add Layout
 
 			h2(data-position='1') Pages
-			p.
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			.panel.panel-default(duck-table='Pages', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= uuid())
+				.panel-heading New Page
+				.panel-body
+					.form-horizontal
+						- name = 'name'; title = 'Name'; value = null;
+						include ../robots/string.pug
+
+						- name = 'url'; title = 'URL';
+						include ../robots/string.pug
+
+						- name = 'layout'; title = 'Layout'; options = site.layouts; var valueField = 'name';
+						include ../robots/select.pug
+
+						- name = 'factory'; title = 'Factories'; options = factories; valueField = '_Id'; var displayField = 'name';
+						include ../robots/selectList.pug
+
+				.panel-footer.text-right
+					button.btn.btn-success(duck-button='submit') Save
 
 			h2(data-position='2') Factories
 			- var newFactoryId = uuid();
@@ -42,18 +164,65 @@ block content
 						li Radio
 						li List of Boolean
 
-			.panel.panel-primary(data-position='2.0', robot-factory='factory')
-				.panel-heading: h3.panel-title Create a Robot Factory
-				.panel-body
+			div(data-position='2.0', robot-factory='factory', duck-table='RobotFactories', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= newFactoryId)
+				h3 Create a Robot Factory
+				
+				.form-horizontal
 					p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
 
-					.form-group
-						label These Robots will be a type of:
-							input.form-control(type='text', placeholder='Bending Unit', factory-id= newFactoryId, robot-factory='name')
+					- name = 'name', title = 'Factory Type';
+					include ../robots/string.pug
 
 					p Now you can dictate what your #[strong Robots] can know.
 
-				table.table
+					.form-group
+						label.col-sm-2.control-label Attribtues
+						.col-sm-10(duck-field='schema', duck-type='array')
+							div
+								.array-item(duck-type='object')
+									.input-group
+										.input-group-addon(data-sort='handle')
+											i.fa.fa-arrows-v(aria-hidden='true')
+										.panel.panel-default
+											.panel-heading New Attribute
+											.panel-body
+												- name = 'name', title = 'Name';
+												include ../robots/string.pug
+
+												.form-group
+													label.col-sm-2.control-label Type
+													.col-sm-10(duck-field='type', duck-type='select')
+														select.form-control(duck-value)
+															option(value='String') String (small amount of text)
+															option(value='Wysiwyg') Text Editor (a lot of text)
+															option Number
+															option(value='Bool') Boolean (true/false)
+															option Image
+															option(value='Robot') Another Robot
+															option(value='Select') Select from List
+															option Radio
+															option Date
+															option Color
+															option File
+
+												- name = 'isList'; title = 'Is a List';
+												include ../robots/checkbox.pug
+
+												- name = 'options'; title = 'Options (if applicable)'; options = null; valueField = null; displayField = null; 
+												include ../robots/stringList.pug
+
+												
+
+
+										.input-group-btn
+											button.btn.btn-danger(duck-button='delete')
+												i.fa.fa-times(aria-hidden='true')
+							p.text-right
+								button.btn.btn-primary(duck-button='add') Add Attribute
+					p.text-right
+						button.btn.btn-success(duck-button='submit') Save
+
+				//table.table
 					thead
 						tr
 							th Attribute
@@ -88,7 +257,7 @@ block content
 									option(value= newFactoryId) Sibling Robots!
 							td(style='padding-top: 12px')
 								button.btn.btn-danger(robot-factory='attribute-delete') &times;
-				.panel-body.text-right
+				//.panel-body.text-right
 					button.btn.btn-primary(robot-factory='attribute-add') Add Some Robot Knowledge
 
 
@@ -145,13 +314,70 @@ block content
 									proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 							.robot--feet
 
-				.panel-footer.text-right
+				//.panel-footer.text-right
 					button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
+
+			div(data-position='2.2', robot-factory='factory')
+				h3 Edit a Robot Factory
+				
+				for factory in factories
+					.panel.panel-default(duck-table='RobotFactories', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= factory._Id)
+						.panel-heading= factory.name
+						.panel-body.form-horizontal
+							- name = 'name'; title = 'Name'; value = factory.name;
+							include ../robots/string.pug
+
+
+							.form-group
+								label.col-sm-2.control-label Attribtues
+								.col-sm-10(duck-field='schema', duck-type='array')
+									div
+										for attribute in factory.schema ? factory.schema : [{}]
+											.array-item(duck-type='object')
+												.input-group
+													.input-group-addon(data-sort='handle')
+														i.fa.fa-arrows-v(aria-hidden='true')
+													.panel.panel-default
+														.panel-heading New Attribute
+														.panel-body
+															- name = 'name'; title = 'Name'; value = attribute.name;
+															include ../robots/string.pug
+
+															.form-group
+																label.col-sm-2.control-label Type
+																.col-sm-10(duck-field='type', duck-type='select')
+																	select.form-control(duck-value)
+																		option(selected= attribute.type === 'String', value='String') String (small amount of text)
+																		option(selected= attribute.type === 'Wysiwyg', value='Wysiwyg') Text Editor (a lot of text)
+																		option(selected= attribute.type === 'Number') Number
+																		option(selected= attribute.type === 'Bool', value='Bool') Boolean (true/false)
+																		option(selected= attribute.type === 'Image') Image
+																		option(selected= attribute.type === 'Robot', value='Robot') Another Robot
+																		option(selected= attribute.type === 'Select', value='Select') Select from List
+																		option(selected= attribute.type === 'Radio') Radio
+																		option(selected= attribute.type === 'Date') Date
+																		option(selected= attribute.type === 'Color') Color
+																		option(selected= attribute.type === 'File') File
+
+															- name = 'isList'; title = 'Is a List'; value = attribute.isList;
+															include ../robots/checkbox.pug
+
+															- name = 'options'; title = 'Options (if applicable)'; var values = attribute.options; options = null; valueField = null; displayField = null; 
+															include ../robots/stringList.pug
+
+													.input-group-btn
+														button.btn.btn-danger(duck-button='delete')
+															i.fa.fa-times(aria-hidden='true')
+									p.text-right
+										button.btn.btn-primary(duck-button='add') Add Attribute
+
+						.panel-footer.text-right
+							button.btn.btn-success(duck-button='submit') Save
 
 			.panel.panel-primary(data-position='2.1')
 				.panel-heading: h3.panel-title Preview
 				.panel-body.form-horizontal(duck-table='test', duck-function='add', duck-key='id')
-					- var name = 'String', defaultValue, defaultValues;
+					- name = 'String', defaultValue, defaultValues, title = null;
 					include ../robots/string.pug
 
 					- name = 'List of Strings'
@@ -220,8 +446,8 @@ block content
 			
 
 	script.
-		void function initRobot($, duck){
-
+		void function initAdminPage($, duck){
+			
 		}(jQuery.noConflict(), duck);
 
 	.modal.fade#ImagePickerModal(tabindex='-1', role='dialog', style='z-index: 2000;')

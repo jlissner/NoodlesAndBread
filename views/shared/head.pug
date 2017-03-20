@@ -8,7 +8,9 @@ head
 
 	//// Styles & Fonts ///////////////////////////////////////////////////////
 	// not hosted local
-	link(rel="stylesheet", href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css")
+	for style in site.styles ? site.styles : []
+		if !style.isDisabled
+			link(rel="stylesheet", href=style.src)
 
 	// hosted local
 	link(rel='stylesheet', href='3rdParty/codemirror/codemirror.css')
@@ -19,14 +21,15 @@ head
 
 	//// Scripts //////////////////////////////////////////////////////////////
 	// not hosted local
-	script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
-	script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
-	script(type='text/javascript', src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
-	script(type='text/javascript', src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
-	script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js')
-	script(type='text/javascript', src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js")
+	for script in site.scripts ? site.scripts : []
+		if !script.isDisabled
+			script(type='text/javascript', src=script.src)
 
 	// hosted local
+	script(type='text/javascript', src='/3rdParty/codemirror/codemirror.js')
+	script(type='text/javascript', src='/3rdParty/codemirror/mode/markdown/markdown.js')
+	script(type='text/javascript', src='/3rdParty/codemirror/mode/pug/pug.js')
+	script(type='text/javascript', src='/3rdParty/datetimepicker/bootstrap-datetimepicker.min.js')
 	script(type='text/javascript', src='/components/duck/duck.min.js')
 	script(type='text/javascript', src='/components/accordion/accordion.min.js')
 	script(type='text/javascript', src='/components/banner/banner.min.js')
@@ -45,11 +48,5 @@ head
 	if (user && user.isAdmin)
 		script(type='text/javascript', src='/components/duck/filepicker/filepicker.min.js')
 		script(type='text/javascript', src='/components/duck/form/form.min.js')
-	script(src='3rdParty/codemirror/codemirror.js')
-	script(src='3rdParty/codemirror/mode/markdown/markdown.js')
-	script(src='3rdParty/codemirror/mode/pug/pug.js')
-	script(type='text/javascript', src='/3rdParty/datetimepicker/bootstrap-datetimepicker.min.js')
-	script(type='text/javascript', src='/3rdParty/spectrum/spectrum.min.js')
+	
 	script(type='text/javascript', src='/js/scripts.js')
-
-	//script(src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js")

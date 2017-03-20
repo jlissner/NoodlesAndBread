@@ -1,6 +1,6 @@
-/* global jQuery, duck, SimpleMDE, window */
+/* global jQuery, duck, SimpleMDE, CodeMirror, window */
 
-void function initDuckForm($, duck, window) {
+void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 	'use strict'
 
 	function deleteArrayItem(e) {
@@ -22,29 +22,6 @@ void function initDuckForm($, duck, window) {
 		const $lastItem = $item.parent().find('> [duck-type]').last();
 		const $clone = $item.clone();
 
-		$clone.find('[duck-value], [duck-type="wysiwyg"]').val(null);
-		$clone.find('[duck-button="delete"]').click(deleteArrayItem);
-		$clone.find('[data-function="tabs"]').makeTabs();
-
-		if($item.attr('duck-type') === 'object'){
-			$clone.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
-			$clone.find('.summernote').parent().empty().append('<div class="summernote"></div>').find('> .summernote').summernote({height: 150});
-			$clone.find('[duck-type="array"] > [duck-type]:not(:first-of-type)').remove();
-			$clone.find('[duck-button="add"]').click(addArrayItem);
-		}
-
-		if($item.attr('duck-type') === 'image') {
-			$clone.find('[duck-image-value]').text('This isn\'t working yet.');
-		}
-
-		if($item.attr('duck-type') === 'color') {
-			$clone.spectrum({showInput: true, preferredFormat: "hex"});
-		}
-
-		if($item.attr('duck-type') === 'date') {
-			$clone.datetimepicker({format: 'MM/DD/YYYY'});
-		}
-
 		switch(addDirection) {
 			case 'after' : {
 				$this.closest('[duck-type]').after($clone)
@@ -60,10 +37,131 @@ void function initDuckForm($, duck, window) {
 			}
 		}
 
+		$clone.find('[duck-value], [duck-type="wysiwyg"]').val(null);
+		$clone.find('[duck-button="delete"]').click(deleteArrayItem);
+		$clone.find('[data-function="tabs"]').makeTabs();
+
+		if($item.attr('duck-type') === 'object'){
+			$clone.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+			$clone.find('[duck-type="array"] > [duck-type]:not(:first-of-type)').remove();
+			$clone.find('[duck-button="add"]').click(addArrayItem);
+			$clone.find('[duck-type="code"]').each(() => {
+				const $codemirror = $clone.find('[data-function*="codemirror"]');
+				$codemirror.html('')
+				const codemirror = $codemirror[0];
+				const $preview = $codemirror.parent().find('[data-codemirror="preview"]');
+				$preview.html('');
+				const _codemirror = CodeMirror(codemirror, {
+						smartIndent: true,
+						indentWithTabs: true,
+						lineNumbers: true,
+						mode: $codemirror.attr('data-mode') || 'pug',
+				});
+
+				if(!$codemirror.is(':visible')) {
+					const refresh = setInterval(() => {
+						if($codemirror.is(':visible')) {
+							_codemirror.refresh();
+							clearTimeout(refresh);
+						}
+					}, 250);
+				}
+
+				$codemirror.prop('codemirror', () => _codemirror);
+
+				if($preview.length) {
+					let doPreview;
+
+					$codemirror.on('input', (_e) => {
+						_e.stopPropagation();
+						_e.preventDefault();
+
+						clearTimeout(doPreview);
+						doPreview = setTimeout(() => {
+							$.ajax({
+								url: '/renderPug',
+								data: {pug: $codemirror.prop('codemirror').getValue(), locals: {}},
+								success: (data) => {
+									$preview.html(data);
+								},
+							});
+						}, 1000)
+						//if()
+
+						
+					})
+				}
+			})
+		}
+
+		if($item.attr('duck-type') === 'image') {
+			$clone.find('[duck-image-value]').text('This isn\'t working yet.');
+		}
+
+		if($item.attr('duck-type') === 'color') {
+			$clone.spectrum({showInput: true, preferredFormat: "hex"});
+		}
+
+		if($item.attr('duck-type') === 'date') {
+			$clone.datetimepicker({format: 'MM/DD/YYYY'});
+		}
+
+		
+
 		if($item.attr('duck-type') === 'wysiwyg') {
 			const _simpleMDE = new SimpleMDE({element: $clone.find('.simpleMDE').html('<textarea>').find('textarea')[0], autoDownloadFontAwesome: false});
 
 			$clone.find('.simpleMDE').prop('simpleMDE', () => _simpleMDE);
+		}
+
+		if($item.attr('duck-type') === 'code') {
+			const $codemirror = $clone.find('[data-function*="codemirror"]');
+			const codemirror = $codemirror[0];
+			const previewTarget = $codemirror.attr('data-preview-target');
+			const _codemirror = CodeMirror(codemirror, {
+					smartIndent: true,
+					indentWithTabs: true,
+					lineNumbers: true,
+					mode: $codemirror.attr('data-mode') || 'pug',
+			});
+
+
+
+			if(!$codemirror.is(':visible')) {
+				const refresh = setInterval(() => {
+					if($codemirror.is(':visible')) {
+						_codemirror.refresh();
+						clearTimeout(refresh);
+					}
+				}, 250);
+			}
+
+			$codemirror.prop('codemirror', () => _codemirror);
+
+			if(previewTarget) {
+				const $preview = $(previewTarget);
+
+				let doPreview;
+
+				$codemirror.on('input', (_e) => {
+					_e.stopPropagation();
+					_e.preventDefault();
+
+					clearTimeout(doPreview);
+					doPreview = setTimeout(() => {
+						$.ajax({
+							url: '/renderPug',
+							data: {pug: $codemirror.prop('codemirror').getValue(), locals: {}},
+							success: (data) => {
+								$preview.html(data);
+							},
+						});
+					}, 1000)
+					//if()
+
+					
+				})
+			}
 		}
 
 		$item.parent().sortable('[duck-type]');
@@ -192,6 +290,15 @@ void function initDuckForm($, duck, window) {
 		}
 	}
 
+	function parseCode(obj, $item, fieldName) {
+		const codemirror = $item.find('[data-function*="codemirror"]').prop('codemirror');
+		const value = codemirror.getValue();
+
+		if(value){
+			obj[fieldName] = value;
+		}
+	}
+
 	function buildObject(obj, $context) {
 		$context.each((i, item) => {
 			const $item = $(item);
@@ -229,6 +336,11 @@ void function initDuckForm($, duck, window) {
 					
 					break;
 				}
+				case 'code': {
+					parseCode(obj, $item, fieldName);
+					
+					break;
+				}
 				case 'image':
 				case 'select': 
 				case 'number': 
@@ -255,14 +367,18 @@ void function initDuckForm($, duck, window) {
 		});
 	}
 
-	function addItem(table, key, keyValue, $startOfFields, successCallback, failureCallBack) {
+	function addItem(table, key, keyValue, range, rangeValue, $startOfFields, successCallback, failureCallBack) {
 		const item = {};
 		item[key] = keyValue || duck.uuid();
+
+		if(range) {
+			item[range] = rangeValue || duck.uuid();
+		}
 
 		duck(table).add(buildObject(item, $startOfFields), successCallback, failureCallBack);
 	}
 
-	function updateItem(table, key, keyValue, $startOfFields, successCallback, failureCallBack) {
+	function updateItem(table, key, keyValue, range, rangeValue, $startOfFields, successCallback, failureCallBack) {
 		duck(table).get({field: key, value: keyValue, findOne: true}, (data) => {
 			const item = buildObject(data, $startOfFields);
 			duck(table).update(item, successCallback, failureCallBack);
@@ -316,6 +432,8 @@ void function initDuckForm($, duck, window) {
 		const table = e.data.table;
 		const key = e.data.key;
 		const keyValue = e.data.keyValue;
+		const range = e.data.range;
+		const rangeValue = e.data.rangeValue;
 		const $startOfFields = e.data.startOfFields;
 		const $wrapper = e.data.wrapper;
 		const successCallback = e.data.successCallback;
@@ -326,28 +444,28 @@ void function initDuckForm($, duck, window) {
 		switch(crud){
 			// adds an item to the table
 			case 'add':{
-				addItem(table, key, keyValue, $startOfFields, successCallback, failureCallBack);
+				addItem(table, key, keyValue, range, rangeValue, $startOfFields, successCallback, failureCallBack);
 
 				break;
 			}
 
 			// updates an item from the table
 			case 'update':{
-				updateItem(table, key, keyValue, $startOfFields, successCallback, failureCallBack);
+				updateItem(table, key, keyValue, range, rangeValue, $startOfFields, successCallback, failureCallBack);
 
 				break;
 			}
 
 			// deletes an item from the table
 			case 'delete':{
-				deleteItem(table, key, keyValue, $wrapper);
+				deleteItem(table, key, keyValue, range, rangeValue, $wrapper);
 
 				break;
 			}
 
 			// deletes a field or value from an item in the table
 			case 'deleteField':{
-				deleteFieldFromItem(table, key, keyValue, $wrapper, successCallback, failureCallBack)
+				deleteFieldFromItem(table, key, keyValue, range, rangeValue, $wrapper, successCallback, failureCallBack)
 
 				break;
 			}
@@ -364,6 +482,8 @@ void function initDuckForm($, duck, window) {
 		const crud = (options && options.crud) || $wrapper.attr('duck-function');
 		const key = (options && options.key) || $wrapper.attr('duck-key');
 		const keyValue = (options && options.keyValue) || $wrapper.attr('duck-key-value');
+		const range = (options && options.range) || $wrapper.attr('duck-range');
+		const rangeValue = range && ((options && options.rangeValue) || $wrapper.attr('duck-range-value'));
 		const $urlField = $wrapper.find('[duck-field="url"] input');
 		const successCallback = (options && options.successCallback) || (() => {window.location.reload(true)});
 		const failureCallBack = (options && options.failureCallBack) || (() => {window.location.reload(true)});
@@ -383,7 +503,7 @@ void function initDuckForm($, duck, window) {
 
 		// set what happens when the submit button is clicked
 		$wrapper.off('click', submitForm)
-				.on('click', '[duck-button="submit"]', {crud, table, key, keyValue, wrapper: $wrapper, startOfFields: $startOfFields, successCallback, failureCallBack}, submitForm);
+				.on('click', '[duck-button="submit"]', {crud, table, key, keyValue, range, rangeValue, wrapper: $wrapper, startOfFields: $startOfFields, successCallback, failureCallBack}, submitForm);
 
 		// set arrays to be sortable
 		$wrapper.find('[duck-type="array"]')
@@ -406,4 +526,4 @@ void function initDuckForm($, duck, window) {
 	}
 
 	$(() => {$('[duck-table]').duckForm();});
-}(jQuery.noConflict(), duck, SimpleMDE, window)
+}(jQuery.noConflict(), duck, SimpleMDE, CodeMirror, window)

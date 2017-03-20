@@ -1,7 +1,7 @@
 .form-group(duck-type='image' duck-field=name)
-	label.col-sm-2.control-label= name
+	label.col-sm-2.control-label= title || name
 	.col-sm-10
-		input.hidden(type='hidden', duck-value, value= value)
+		input.hidden(type='hidden', duck-value, value= value, required= required)
 		.form-control
 			i.fa.fa-image(aria-hidden='true')
 			| &nbsp;&nbsp;&nbsp;

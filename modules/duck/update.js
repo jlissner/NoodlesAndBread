@@ -63,7 +63,7 @@ const readJSON      = require('../readJSON');
 /*  final update
 	makes the last call to the database, */
 
-	function finalUpdate(table, key, data, resolve, reject){
+	function finalUpdate(table, key, range, data, resolve, reject){
 		const params = {
 				TableName: table,
 				Key: {},
@@ -77,7 +77,7 @@ const readJSON      = require('../readJSON');
 		
 		// create the full update expression
 		for (item in flattenedData){
-			if(item !== key) {
+			if(item !== key && item !== range) {
 				// 'a.b.c' => 'a.#b.#c'
 				const concatinatedExpression = item.replace('.', '.#');
 				const arr = item.split('.');
@@ -101,6 +101,10 @@ const readJSON      = require('../readJSON');
 		}
 
 		params.Key[key] = data[key];
+
+		if(range) {
+			params.Key[range] = data[range];			
+		}
 
 		// delete the last comma from the UpdateExpression
 		updateExpression = updateExpression.substring(0, updateExpression.length - 1);
@@ -143,9 +147,9 @@ const readJSON      = require('../readJSON');
 				process.exit();
 			} else {
 				if (objectsToAdd.length == i) {
-					finalUpdate(table, key, data, resolve, reject);
+					finalUpdate(table, key, range, data, resolve, reject);
 				} else {
-					addMissingObjects(i, table, objectsToAdd, key, data, resolve, reject)
+					addMissingObjects(i, table, objectsToAdd, key, range, data, resolve, reject)
 				}
 			}
 		});
@@ -156,7 +160,7 @@ const readJSON      = require('../readJSON');
     ReAssign - bool - change object from { a.b: 'foo'} to { a: { b: 'foo' }}
 	TODO make it work with HASH-RANGE keys*/
 
-    function updateItem(data, reAssign, table, schema, key, oldItem, schemaless) {
+    function updateItem(data, reAssign, table, schema, key, range, oldItem, schemaless) {
     	return new Promise((resolve, reject) => {
     		if(!schemaless && !checkSchema(data, reAssign, schema, table)) {
 				reject('Mismatch of data types');
@@ -166,9 +170,9 @@ const readJSON      = require('../readJSON');
 			const objectsToAdd = findObjectsToAdd(table, data, oldItem);
 
 			if(objectsToAdd.length){
-				addMissingObjects(0, table, objectsToAdd, key, data, resolve, reject);
+				addMissingObjects(0, table, objectsToAdd, key, range, data, resolve, reject);
 			} else {
-				finalUpdate(table, key, data, resolve, reject);
+				finalUpdate(table, key, range, data, resolve, reject);
 			}
     	})
     }
@@ -181,6 +185,7 @@ const readJSON      = require('../readJSON');
 		const table = this.table;
 		const schema = this.itemSchema;
 		const key = this.hash;
+		const range = this.range;
 		const schemaless = this.schemaless
 		const bulkUpdate = data instanceof Array;
 		const oldItem = bulkUpdate ? [] : this.findOne(key, data[key]).items;
@@ -196,7 +201,7 @@ const readJSON      = require('../readJSON');
 		return new Promise((resolve, reject) => {
 			if(bulkUpdate) {
 				void function updates(item) {
-					updateItem(item, reAssign, table, schema, key, oldItem[item[key]], schemaless).then((success) => {
+					updateItem(item, reAssign, table, schema, key, range, oldItem[item[key]], schemaless).then((success) => {
 						if (data.length) {
 							updates(data.shift())
 						} else {
@@ -207,7 +212,7 @@ const readJSON      = require('../readJSON');
 					});
 				}(data.shift())
 			} else {
-				updateItem(data, reAssign, table, schema, key, oldItem, schemaless).then((success) => {
+				updateItem(data, reAssign, table, schema, key, range, oldItem, schemaless).then((success) => {
 					resolve(success)
 				}, (error) => {
 					reject(error)

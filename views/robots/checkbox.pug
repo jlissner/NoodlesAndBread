@@ -1,6 +1,6 @@
 .form-group(duck-type='bool', duck-field= name)
-	label.col-sm-2.control-label= name
+	label.col-sm-2.control-label= title || name
 	.col-sm-10.checkbox
 		label
-			input(type='checkbox', checked= value)
-			| True/False
+			input(type='checkbox', checked= value, duck-value, required= required)
+			= title

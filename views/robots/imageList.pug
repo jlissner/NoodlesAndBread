@@ -1,12 +1,12 @@
 .form-group(duck-type='array', duck-field= name)
-	label.col-sm-2.control-label= name
+	label.col-sm-2.control-label= title || name
 	.col-sm-10
 		div
 			for v in values ? values : [null]
 				.array-item(duck-type='image')
-					input.hidden(type='hidden', duck-value, value= v)
+					input.hidden(type='hidden', duck-value, value= v, required= required)
 					.input-group
-						.input-group-addon
+						.input-group-addon(data-sort='handle')
 							i.fa.fa-arrows-v(aria-hidden='true')
 						.form-control
 							i.fa.fa-image(aria-hidden='true')

@@ -1,13 +1,13 @@
 .form-group(duck-type='array', duck-field= name)
-	label.col-sm-2.control-label= name
+	label.col-sm-2.control-label= title || name
 	.col-sm-10
 		div
 			for v in values ? values : [null]
 				.array-item(duck-type='number')
 					.input-group
-						.input-group-addon
+						.input-group-addon(data-sort='handle')
 							i.fa.fa-arrows-v(aria-hidden='true')
-						input.form-control(type='number', placeholder= name, duck-value, value= v)
+						input.form-control(type='number', placeholder= name, duck-value, value= v, required= required)
 						.input-group-btn
 							button.btn.btn-danger(duck-button='delete')
 								i.fa.fa-times(aria-hidden='true')

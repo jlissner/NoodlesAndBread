@@ -21,6 +21,7 @@ const router     = express.Router();
 
 		if(!table){
 			res.status(500).send('Please choose a table.');
+			return;
 		}
 
 		const items = findOne ? table.findOne(field, value).items : table.find(field, value).items;
@@ -36,6 +37,7 @@ const router     = express.Router();
 
 		if(!table){
 			res.status(500).send('Please choose a table.');
+			return;
 		}
 
 		const items = findOne ? table.findOne(field, value).items : table.find(field, value).items;
@@ -50,6 +52,7 @@ const router     = express.Router();
 		if(!table){
 			console.error('Please choose a table.');
 			res.status(500).send('Please choose a table.');
+			return;
 		}
 
 		table.add(item)
@@ -70,6 +73,7 @@ const router     = express.Router();
 		if(!table){
 			console.error('Please choose a table.');
 			res.status(500).send('Please choose a table.');
+			return;
 		}
 
 		table.update(item)
@@ -90,6 +94,7 @@ const router     = express.Router();
 		if(!table){
 			console.error('Please choose a table.');
 			res.status(500).send('Please choose a table.');
+			return;
 		}
 
 		table.delete(key)
@@ -201,8 +206,8 @@ const router     = express.Router();
 		const locals = params.locals
 
 		res.send(pug.renderFile(filePath, locals));
-
 		return;
+
 		fs.readFile(filePath, (err, data) => {
 			if(err) {
 				res.status(500).send(err);

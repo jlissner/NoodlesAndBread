@@ -1,0 +1,9 @@
+.form-group(duck-type='select' duck-field=name)
+	label.col-sm-2.control-label= title || name
+	.col-sm-10
+		select.form-control(duck-value, required= required)
+			for option in options ? options : []
+				if typeof option === 'object'
+					option(value= option[valueField || name], selected= option[name] === value)= option[displayField || valueField || name]
+				else
+					option(value= option, selected= option === value)= option

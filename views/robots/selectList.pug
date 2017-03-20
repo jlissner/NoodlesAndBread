@@ -3,11 +3,16 @@
 	.col-sm-10
 		div
 			for v in values ? values : [null]
-				.array-item(duck-type='string')
+				.array-item(duck-type='select')
 					.input-group
 						.input-group-addon(data-sort='handle')
 							i.fa.fa-arrows-v(aria-hidden='true')
-						input.form-control(type='text', placeholder= title || name, duck-value, value= v, required= required)
+						select.form-control(duck-value, required= required)
+							for option in options ? options : []
+								if typeof option === 'object'
+									option(value= option[valueField || name], selected= option[name] === value)= option[displayField || valueField || name]
+								else
+									option(value= option, selected= option === value)= option
 						.input-group-btn
 							button.btn.btn-danger(duck-button='delete')
 								i.fa.fa-times(aria-hidden='true')
