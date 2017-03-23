@@ -1,6 +1,9 @@
 extends ../layout.pug
 
 block content
+	header.site-header
+		include ../shared/header.pug
+
 	.container(style='display: flex;')
 		include nav.pug
 
@@ -128,12 +131,52 @@ block content
 					p.text-right
 						button.btn.btn-primary(duck-button='add') Add Layout
 
+			h3(data-position='0.2') Controls
+			div(data-function='accordion', duck-table='Sites', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= site._Id)
+				div(duck-type='array', duck-field='controls')
+					div
+						for control, i in site.controls ? site.controls : [{}]
+							.array-item(duck-type='object')
+								.input-group
+									.input-group-addon(data-sort='handle')
+										i.fa.fa-arrows-v(aria-hidden='true')
+									.panel.panel-default(data-function='accordion')
+										.panel-heading(role='tab', aria-expanded='false')= control.name || 'New Control'
+										div(role='tabpanel', aria-hidden='true')
+											.panel-body
+												.form-horizontal
+													- name = 'name'; value = control.name; title = 'Name';
+													include ../robots/string.pug
+
+													- name = 'category'; value = control.category; title = 'Category';
+													include ../robots/string.pug
+
+													- name = 'documentation'; value = control.documentation; title = 'Documentation';
+													include ../robots/wysiwyg.pug
+
+												table.table.table-bordered.mb-0
+													thead
+														tr
+															th.col-xs-6 Body
+															th.col-xs-6 Preview
+													tbody
+														tr(duck-field="pug", duck-type='code')
+															td.p-0(data-function='codemirror')= control.pug
+															td: div(data-codemirror='preview')
+											.panel-footer.text-right
+												button.btn.btn-success(duck-button='submit') Save
+									.input-group-btn
+										button.btn.btn-danger(duck-button='delete')
+											i.fa.fa-times(aria-hidden='true')
+					p.text-right
+						button.btn.btn-primary(duck-button='add') Add Control
+
 			h2(data-position='1') Pages
 			.panel.panel-default(duck-table='Pages', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= uuid())
 				.panel-heading New Page
 				.panel-body
 					.form-horizontal
-						- name = 'name'; title = 'Name'; value = null;
+						- name = 'name'; title = 'Name'; value = null; var required = true;
 						include ../robots/string.pug
 
 						- name = 'url'; title = 'URL';
@@ -141,14 +184,15 @@ block content
 
 						- name = 'layout'; title = 'Layout'; options = site.layouts; var valueField = 'name';
 						include ../robots/select.pug
-
-						- name = 'factory'; title = 'Factories'; options = factories; valueField = '_Id'; var displayField = 'name';
-						include ../robots/selectList.pug
+						- required = false;
+						//- name = 'factory'; title = 'Factories'; options = factories; valueField = '_Id'; var displayField = 'name';
+						//include ../robots/selectList.pug
 
 				.panel-footer.text-right
-					button.btn.btn-success(duck-button='submit') Save
+					button.btn.btn-success(duck-button='submit', type='submit') Save
 
 			h2(data-position='2') Factories
+			p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
 			- var newFactoryId = uuid();
 			if user && user.isAdmin
 				.alert.alert-danger
@@ -164,161 +208,65 @@ block content
 						li Radio
 						li List of Boolean
 
-			div(data-position='2.0', robot-factory='factory', duck-table='RobotFactories', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= newFactoryId)
+			div(data-position='2.0', robot-factory='factory')
 				h3 Create a Robot Factory
-				
-				.form-horizontal
-					p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
+				.panel.panel-default(duck-table='RobotFactories', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= newFactoryId)
+					.panel-heading New Factory
+					.panel-body.form-horizontal
+					
 
-					- name = 'name', title = 'Factory Type';
-					include ../robots/string.pug
+						- name = 'name', title = 'Factory Type';
+						include ../robots/string.pug
 
-					p Now you can dictate what your #[strong Robots] can know.
+						p Now you can dictate what your #[strong Robots] can know.
 
-					.form-group
-						label.col-sm-2.control-label Attribtues
-						.col-sm-10(duck-field='schema', duck-type='array')
-							div
-								.array-item(duck-type='object')
-									.input-group
-										.input-group-addon(data-sort='handle')
-											i.fa.fa-arrows-v(aria-hidden='true')
-										.panel.panel-default
-											.panel-heading New Attribute
-											.panel-body
-												- name = 'name', title = 'Name';
-												include ../robots/string.pug
+						.form-group
+							label.col-sm-2.control-label Attribtues
+							.col-sm-10(duck-field='schema', duck-type='array')
+								div
+									.array-item(duck-type='object')
+										.input-group
+											.input-group-addon(data-sort='handle')
+												i.fa.fa-arrows-v(aria-hidden='true')
+											.panel.panel-default
+												.panel-heading New Attribute
+												.panel-body
+													- name = 'name', title = 'Name';
+													include ../robots/string.pug
 
-												.form-group
-													label.col-sm-2.control-label Type
-													.col-sm-10(duck-field='type', duck-type='select')
-														select.form-control(duck-value)
-															option(value='String') String (small amount of text)
-															option(value='Wysiwyg') Text Editor (a lot of text)
-															option Number
-															option(value='Bool') Boolean (true/false)
-															option Image
-															option(value='Robot') Another Robot
-															option(value='Select') Select from List
-															option Radio
-															option Date
-															option Color
-															option File
+													.form-group
+														label.col-sm-2.control-label Type
+														.col-sm-10(duck-field='type', duck-type='select')
+															select.form-control(duck-value)
+																option(value='String') String (small amount of text)
+																option(value='Wysiwyg') Text Editor (a lot of text)
+																option Number
+																option(value='Bool') Boolean (true/false)
+																option Image
+																option(value='Robot') Another Robot
+																option(value='Select') Select from List
+																option Radio
+																option Date
+																option Color
+																option File
 
-												- name = 'isList'; title = 'Is a List';
-												include ../robots/checkbox.pug
+													- name = 'isList'; title = 'Is a List';
+													include ../robots/checkbox.pug
 
-												- name = 'options'; title = 'Options (if applicable)'; options = null; valueField = null; displayField = null; 
-												include ../robots/stringList.pug
+													- name = 'options'; title = 'Options (if applicable)'; options = null; valueField = null; displayField = null; 
+													include ../robots/stringList.pug
 
-												
+											.input-group-btn
+												button.btn.btn-danger(duck-button='delete')
+													i.fa.fa-times(aria-hidden='true')
+								p.text-right
+									button.btn.btn-primary(duck-button='add') Add Attribute
+					.panel-footer
+						.text-right
+							button.btn.btn-success(duck-button='submit') Save
 
-
-										.input-group-btn
-											button.btn.btn-danger(duck-button='delete')
-												i.fa.fa-times(aria-hidden='true')
-							p.text-right
-								button.btn.btn-primary(duck-button='add') Add Attribute
-					p.text-right
-						button.btn.btn-success(duck-button='submit') Save
-
-				//table.table
-					thead
-						tr
-							th Attribute
-							th
-							th Type
-							th
-							th
-							th
-					tbody(robot-factory='attributes')
-						tr(robot-factory='attribute')
-							td
-								input.form-control(type='text', placeholder='Favorite Alcohol', robot-factory='attribute-name')
-							td
-								//button.btn.btn-default 
-								.checkbox
-									label
-										input(type='checkbox', robot-factory='attribute-is-list')
-										| Is List of
-							td
-								select.form-control(robot-factory='attribute-type')
-									option(value='String') A little Text
-									option(value='Wysiwyg') A lot of Text
-									option Number
-									option(value='Bool') Boolean (true/false)
-									option Image
-									option(value='Robot') Another Robot
-									option User
-									option Date
-							td
-							td
-								select.form-control(disabled, robot-factory='attribute-robot')
-									option(value= newFactoryId) Sibling Robots!
-							td(style='padding-top: 12px')
-								button.btn.btn-danger(robot-factory='attribute-delete') &times;
-				//.panel-body.text-right
-					button.btn.btn-primary(robot-factory='attribute-add') Add Some Robot Knowledge
-
-
-				//.row
-					.col-xs-6.col-xs-push-3
-						style.
-							.robot--head {
-								height: 100px;
-								width: 50%;
-								margin: 0 auto;
-								position: relative;
-								background: grey;
-							}
-							.robot--body {
-								border: 15px solid grey;
-								padding: 15px;
-								background: lightgrey;
-							}
-
-							.robot--feet {
-								height: 200px;
-								width: 50%;
-								margin: 0 auto;
-								position: relative;
-							}
-
-							.robot--feet:before,
-							.robot--feet:after {
-								content: ' ';
-								background: grey;
-								position: absolute;
-								top: 0;
-								bottom: 0;
-								width: 50px;
-							}
-							.robot--feet:before {
-								left: 0;
-							}
-
-							.robot--feet:after {
-								right: 0;
-							}
-
-
-						.robot
-							.robot--head
-							.robot--body
-								p.
-									Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-									tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-									quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-									consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-									cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-									proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-							.robot--feet
-
-				//.panel-footer.text-right
-					button#SaveFactory.btn.btn-success(robot-factory='save', disabled) Create #[strong Factory]
-
-			div(data-position='2.2', robot-factory='factory')
-				h3 Edit a Robot Factory
+			div(data-position='2.1', robot-factory='factory')
+				h3 Edit Factories
 				
 				for factory in factories
 					.panel.panel-default(duck-table='RobotFactories', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= factory._Id)
@@ -337,9 +285,9 @@ block content
 												.input-group
 													.input-group-addon(data-sort='handle')
 														i.fa.fa-arrows-v(aria-hidden='true')
-													.panel.panel-default
-														.panel-heading New Attribute
-														.panel-body
+													.panel.panel-default(data-function='accordion')
+														.panel-heading(role='tab', aria-expanded='false')= attribute.name
+														.panel-body(role='tabpanel', aria-hidden='true')
 															- name = 'name'; title = 'Name'; value = attribute.name;
 															include ../robots/string.pug
 
@@ -374,57 +322,58 @@ block content
 						.panel-footer.text-right
 							button.btn.btn-success(duck-button='submit') Save
 
-			.panel.panel-primary(data-position='2.1')
-				.panel-heading: h3.panel-title Preview
-				.panel-body.form-horizontal(duck-table='test', duck-function='add', duck-key='id')
-					- name = 'String', defaultValue, defaultValues, title = null;
-					include ../robots/string.pug
+			.panel.panel-primary(data-function='accordion', data-position='2.2')
+				.panel-heading(role='tab', aria-expanded='false'): h3.panel-title Attribute Type Refereance
+				div(role='tabpanel', aria-hidden='true')
+					.panel-body.form-horizontal(duck-table='test', duck-function='add', duck-key='id')
+						- name = 'String', defaultValue, defaultValues, title = null;
+						include ../robots/string.pug
 
-					- name = 'List of Strings'
-					include ../robots/stringList.pug
+						- name = 'List of Strings'
+						include ../robots/stringList.pug
 
-					- name = 'Number'
-					include ../robots/number.pug
+						- name = 'Number'
+						include ../robots/number.pug
 
-					- name = 'List of Numbers'
-					include ../robots/numberList.pug
+						- name = 'List of Numbers'
+						include ../robots/numberList.pug
 
-					- name = 'Date'
-					include ../robots/date.pug
+						- name = 'Date'
+						include ../robots/date.pug
 
-					- name = 'List of Dates'
-					include ../robots/dateList.pug
+						- name = 'List of Dates'
+						include ../robots/dateList.pug
 
-					- name = 'User'
-					include ../robots/user.pug
+						- name = 'User'
+						include ../robots/user.pug
 
-					- name = 'List of Users'
-					include ../robots/userList.pug
+						- name = 'List of Users'
+						include ../robots/userList.pug
 
-					- name = 'Robot'
-					- var factory = {Id: newFactoryId, name: 'This Factory'}
-					include ../robots/robot.pug
+						- name = 'Robot'
+						- var factory = {Id: newFactoryId, name: 'This Factory'}
+						include ../robots/robot.pug
 
-					- name = 'List of Robots'
-					include ../robots/robotList.pug
+						- name = 'List of Robots'
+						include ../robots/robotList.pug
 
-					- name = 'Text Editor'
-					include ../robots/wysiwyg.pug
+						- name = 'Text Editor'
+						include ../robots/wysiwyg.pug
 
-					- name = 'List of Text Editors'
-					include ../robots/wysiwygList.pug
+						- name = 'List of Text Editors'
+						include ../robots/wysiwygList.pug
 
-					- name = 'Checkbox'
-					include ../robots/checkbox.pug
+						- name = 'Checkbox'
+						include ../robots/checkbox.pug
 
-					- var radioOptions = ['Radio 1', 'Radio 2', 'Radio 3'];name = 'radio';
-					include ../robots/radio.pug
+						- var radioOptions = ['Radio 1', 'Radio 2', 'Radio 3'];name = 'radio';
+						include ../robots/radio.pug
 
-					- name = 'Image'
-					include ../robots/image.pug
+						- name = 'Image'
+						include ../robots/image.pug
 
-					- name = 'Color'
-					include ../robots/color.pug
+						- name = 'Color'
+						include ../robots/color.pug
 
 			h2(data-position='3') Bodies
 			p.

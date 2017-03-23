@@ -281,9 +281,9 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 		}
 	}
 
-	function parseWysiwyg(obj, $item, fieldName, editor) {
-		const summernote = editor || '.summernote';
-		const value = $item.find(summernote).summernote('code');
+	function parseWysiwyg(obj, $item, fieldName) {
+		const wysiwyg = '.simpleMDE > textarea';
+		const value = $item.find(wysiwyg).prop('simpleMDE').value();
 
 		if(value){
 			obj[fieldName] = value;

@@ -1454,6 +1454,7 @@ th {
   width: 100%;
   max-width: 100%;
   margin-bottom: 23px;
+  table-layout: fixed;
 }
 .table > thead > tr > th,
 .table > tbody > tr > th,
@@ -6646,6 +6647,11 @@ td[data-function*="codemirror"] {
 td[data-function*="codemirror"] .codemirror {
   padding: 0;
   border: none;
+}
+[data-codemirror="preview"] {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 #Noodles .m-0 {
   margin: 0;

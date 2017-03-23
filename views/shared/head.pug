@@ -8,7 +8,7 @@ head
 
 	//// Styles & Fonts ///////////////////////////////////////////////////////
 	// not hosted local
-	for style in site.styles ? site.styles : []
+	for style in site && site.styles ? site.styles : []
 		if !style.isDisabled
 			link(rel="stylesheet", href=style.src)
 
@@ -21,7 +21,7 @@ head
 
 	//// Scripts //////////////////////////////////////////////////////////////
 	// not hosted local
-	for script in site.scripts ? site.scripts : []
+	for script in site && site.scripts ? site.scripts : []
 		if !script.isDisabled
 			script(type='text/javascript', src=script.src)
 
@@ -48,5 +48,6 @@ head
 	if (user && user.isAdmin)
 		script(type='text/javascript', src='/components/duck/filepicker/filepicker.min.js')
 		script(type='text/javascript', src='/components/duck/form/form.min.js')
+		script(type='text/javascript', src='/components/validateForm/validateForm.min.js')
 	
 	script(type='text/javascript', src='/js/scripts.js')
