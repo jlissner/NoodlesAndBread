@@ -83,11 +83,10 @@ app.use(express.static(path.join(__dirname, 'public'))); // Sets the public fold
 // required for passport
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-        name: 'sessionForLissnerListner',
+        name: 'sessionForNoodlesAndBread',
         keys: ['key1', 'key2']
     }
 )); // session secret
-
 
 app.use(
     passport.initialize(), // initialize passport
@@ -95,13 +94,13 @@ app.use(
     flash(), // initialize flash messages
     setFlash, // set up flash messages
     getUser, // get the user
-    globalLocals, // set variables and functions to be used on all views, mainly helper functions
     User.getCached(), // get/set cache of all tables
     Site.getCached(),
     Page.getCached(),
     RobotFactory.getCached(),
     RobotBody.getCached(),
-    Robot.getCached()
+    Robot.getCached(),
+    globalLocals // set variables and functions to be used on all views, mainly helper functions
 );
 
 // CRUD
@@ -113,9 +112,9 @@ app.use('/', routes);
 // route based on url if possible
 app.use(route);
 
-app.use('/admin', isLoggedIn(true), admin);
-
 // error handlers /////////////////////////////////////////////////////
+
+app.use((req, res, next) => {console.log('~~ on to errors ~~'); next()})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -134,6 +133,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
+        console.log(err);
         res.render('error', {
             message: err.message,
             error: err

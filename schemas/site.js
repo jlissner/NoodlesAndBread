@@ -26,12 +26,12 @@ const Site = Duck({
 			src: String,
 			isDisabled: Boolean,
 		}],
-		mixins: [{
+		controls: [{
 			name: String,
 			category: String,
 			pug: String,
 			documentation: String,
-		}]
+		}],
 	},
 	
 	HASH: 'Id',

@@ -67,6 +67,7 @@ const router     = express.Router();
 	});
 
 	router.post('/update/:table', isLoggedIn(true), (req, res) => {
+		console.log('here')
 		const item = req.body.item;
 		const table = pickTable(req.params.table);
 
@@ -219,7 +220,7 @@ const router     = express.Router();
 	});
 
 	router.get('/renderPug', (req, res) => {
-		pug.render(req.query.pug, req.query.locals, (err, html) => {
+		pug.render(req.query.pug, req.query.locals || res.locals, (err, html) => {
 			res.send(err ? String(err) : html)
 		});
 	});

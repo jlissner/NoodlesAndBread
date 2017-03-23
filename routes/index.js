@@ -49,7 +49,7 @@ router.post('/auth/signup', passport.authenticate('local-signup', {
 	failureFlash: true
 }));
 
-router.post('/auth/local', User.getCached(), passport.authenticate('local-login', {
+router.post('/auth/local', passport.authenticate('local-login', {
 	successRedirect: '/',
 	failureRedirect: '/',
 	failureFlash: true
