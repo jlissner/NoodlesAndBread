@@ -3,8 +3,8 @@ const Duck = require('../modules/duck');
 const Site = Duck({
 	Table: 'NoodlesSites',
 	Item: {
-		Id: String,
-		_Id: String,
+		Id: String, // Domain Id
+		_Id: String , // Subdomain Id
 		domain: String,
 		subDomain: String,
 		name: String,

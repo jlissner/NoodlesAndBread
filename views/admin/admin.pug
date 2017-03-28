@@ -55,7 +55,7 @@ block content
 												button.btn.btn-danger(duck-button='delete')
 													i.fa.fa-times(aria-hidden='true')
 							p.text-right
-								button.btn.btn-primary(duck-button='add') Add Script
+								button.btn.btn-default(duck-button='add') Add Script
 
 					.form-group(duck-field='styles', duck-type='array')
 						label.col-sm-2.control-label Styles #[br] (3rd Party)
@@ -86,7 +86,7 @@ block content
 												button.btn.btn-danger(duck-button='delete')
 													i.fa.fa-times(aria-hidden='true')
 							p.text-right
-								button.btn.btn-primary(duck-button='add') Add Style
+								button.btn.btn-default(duck-button='add') Add Style
 
 					.alert.alert-danger(style='margin-bottom: 0;')
 						h3(style='margin-top: 0;') To Do
@@ -95,7 +95,7 @@ block content
 							li Theme Select
 				.panel-footer
 					.text-right
-						button.btn.btn-success(duck-button='submit') Save
+						button.btn.btn-primary(duck-button='submit') Save
 
 			h3(data-position='0.1') Layouts
 			div(data-function='accordion', duck-table='Sites', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= site._Id)
@@ -124,12 +124,12 @@ block content
 															td.p-0(data-function='codemirror')= layout.pug
 															td: div(data-codemirror='preview')
 											.panel-footer.text-right
-												button.btn.btn-success(duck-button='submit') Save
+												button.btn.btn-primary(duck-button='submit') Save
 									.input-group-btn
 										button.btn.btn-danger(duck-button='delete')
 											i.fa.fa-times(aria-hidden='true')
 					p.text-right
-						button.btn.btn-primary(duck-button='add') Add Layout
+						button.btn.btn-default(duck-button='add') Add Layout
 
 			h3(data-position='0.2') Controls
 			div(data-function='accordion', duck-table='Sites', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= site._Id)
@@ -164,12 +164,12 @@ block content
 															td.p-0(data-function='codemirror')= control.pug
 															td: div(data-codemirror='preview')
 											.panel-footer.text-right
-												button.btn.btn-success(duck-button='submit') Save
+												button.btn.btn-primary(duck-button='submit') Save
 									.input-group-btn
 										button.btn.btn-danger(duck-button='delete')
 											i.fa.fa-times(aria-hidden='true')
 					p.text-right
-						button.btn.btn-primary(duck-button='add') Add Control
+						button.btn.btn-default(duck-button='add') Add Control
 
 			h2(data-position='1') Pages
 			.panel.panel-default(duck-table='Pages', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= uuid())
@@ -189,7 +189,51 @@ block content
 						//include ../robots/selectList.pug
 
 				.panel-footer.text-right
-					button.btn.btn-success(duck-button='submit', type='submit') Save
+					button.btn.btn-primary(duck-button='submit', type='submit') Save
+
+			for page in pages ? pages : []
+				.panel.panel-default(duck-table='Pages', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= page._Id)
+					.panel-heading= page.name
+					.panel-body
+						.form-horizontal
+							- name = 'name'; title = 'Name'; value = null; var required = true; value = page.name;
+							include ../robots/string.pug
+
+							- name = 'url'; title = 'URL';  value = page.url;
+							include ../robots/string.pug
+
+							- name = 'layout'; title = 'Layout'; options = site.layouts; var valueField = 'name'; value = page.layout;
+							include ../robots/select.pug
+							- required = false;
+
+							.form-group
+								label.col-sm-2.control-label Robots
+								.col-sm-10(duck-type='array', duck-field='robots')
+									div
+										for robot, i in page.robots ? page.robots : [{}]
+											.array-item(duck-type='object')
+												.input-group
+													.input-group-addon(data-sort='handle')
+														i.fa.fa-arrows-v(aria-hidden='true')
+
+													.panel.panel-default(data-function='accordion')
+														.panel-heading(role='tab', aria-expanded='false')= robot.name || 'New Robot'
+														div(role='tabpanel', aria-hidden='true')
+															.panel-body
+																.form-horizontal
+																	- name = 'Id'; value = robot.Id; title = 'Robot'; options = robots; valueField = '_Id'; displayField = 'name';
+																	include ../robots/select.pug
+
+																	- name = 'home'; value = robot.home || 'content'; title = 'Home';
+																	include ../robots/string.pug
+													.input-group-btn
+														button.btn.btn-danger(duck-button='delete')
+															i.fa.fa-times(aria-hidden='true')
+									p.text-right
+										button.btn.btn-default(duck-button='add') Add Robot
+
+					.panel-footer.text-right
+						button.btn.btn-primary(duck-button='submit', type='submit') Save
 
 			h2(data-position='2') Factories
 			p.lead A <em>Robot Factory</em> is used to define what kind of <em>Robots</em> you can make.
@@ -260,10 +304,10 @@ block content
 												button.btn.btn-danger(duck-button='delete')
 													i.fa.fa-times(aria-hidden='true')
 								p.text-right
-									button.btn.btn-primary(duck-button='add') Add Attribute
+									button.btn.btn-default(duck-button='add') Add Attribute
 					.panel-footer
 						.text-right
-							button.btn.btn-success(duck-button='submit') Save
+							button.btn.btn-primary(duck-button='submit') Save
 
 			div(data-position='2.1', robot-factory='factory')
 				h3 Edit Factories
@@ -317,12 +361,12 @@ block content
 														button.btn.btn-danger(duck-button='delete')
 															i.fa.fa-times(aria-hidden='true')
 									p.text-right
-										button.btn.btn-primary(duck-button='add') Add Attribute
+										button.btn.btn-default(duck-button='add') Add Attribute
 
 						.panel-footer.text-right
-							button.btn.btn-success(duck-button='submit') Save
+							button.btn.btn-primary(duck-button='submit') Save
 
-			.panel.panel-primary(data-function='accordion', data-position='2.2')
+			.panel.panel-info(data-function='accordion', data-position='2.2')
 				.panel-heading(role='tab', aria-expanded='false'): h3.panel-title Attribute Type Refereance
 				div(role='tabpanel', aria-hidden='true')
 					.panel-body.form-horizontal(duck-table='test', duck-function='add', duck-key='id')
@@ -344,18 +388,11 @@ block content
 						- name = 'List of Dates'
 						include ../robots/dateList.pug
 
-						- name = 'User'
-						include ../robots/user.pug
+						//- name = 'User'
+							include ../robots/user.pug
 
-						- name = 'List of Users'
-						include ../robots/userList.pug
-
-						- name = 'Robot'
-						- var factory = {Id: newFactoryId, name: 'This Factory'}
-						include ../robots/robot.pug
-
-						- name = 'List of Robots'
-						include ../robots/robotList.pug
+						//- name = 'List of Users'
+							include ../robots/userList.pug
 
 						- name = 'Text Editor'
 						include ../robots/wysiwyg.pug
@@ -375,25 +412,242 @@ block content
 						- name = 'Color'
 						include ../robots/color.pug
 
-			h2(data-position='3') Bodies
-			p.
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+			h2(data-position='3') Robot Parts
+			for factory, i in factories ? factories : []
+				h3(data-position=`4.${i}`)= factory.name
+				.panel.panel-default(data-function='accordion', duck-table='RobotParts', duck-function='add', duck-key='Id', duck-key-value= factory._Id, duck-range='_Id', duck-range-value= uuid())
+						.panel-heading(role='tab', aria-expanded= 'true') New Robot
+						div(role='tabpanel', aria-hidden= 'false')
+							.panel-body
+								.form-horizontal
+									for attribute in factory.schema ? factory.schema : []
+										- value = null; name = attribute.name; title = attribute.name;
+										case attribute.type
+											when 'Bool'
+												if attribute.isList
+													include ../robots/checkboxList.pug
+												else
+													include ../robots/checkbox.pug
+											when 'Code'
+												include ../robots/code.pug
+											when 'Color'
+												if attribute.isList
+													include ../robots/colorList.pug
+												else
+													include ../robots/color.pug
+											when 'Date'
+												if attribute.isList
+													include ../robots/dateList.pug
+												else
+													include ../robots/date.pug
+											when 'Image'
+												if attribute.isList
+													include ../robots/imageList.pug
+												else
+													include ../robots/image.pug
+											when 'Number'
+												if attribute.isList
+													include ../robots/numberList.pug
+												else
+													include ../robots/number.pug
+											when 'Radio'
+												include ../robots/radio.pug
+											when 'Select'
+												if attribute.isList
+													include ../robots/selectList.pug
+												else
+													include ../robots/select.pug
+											when 'Wysiwyg'
+												if attribute.isList
+													include ../robots/wysiwygList.pug
+												else
+													include ../robots/wysiwyg.pug
+											when 'String'
+											default
+												if attribute.isList
+													include ../robots/stringList.pug
+												else
+													include ../robots/string.pug
+
+							.panel-footer.text-right
+								button.btn.btn-primary(duck-button='submit') Save
+
+				- var factoryParts = parts && parts.filter((_part) => (_part.Id === factory.Id));
+				for part in factoryParts ? factoryParts : []
+					.panel.panel-default(data-function='accordion', duck-table='RobotParts', duck-function='update', duck-key='Id', duck-key-value= part.Id, duck-range='_Id', duck-range-value= part._Id)
+						.panel-heading(role='tab', aria-expanded= 'false')= part.name || 'Unnamed'
+						div(role='tabpanel', aria-hidden= 'true')
+							.panel-body
+								.form-horizontal
+									for attribute in factory.schema ? factory.schema : []
+										- value = part[attribute.name]; name = attribute.name; title = attribute.name;
+										case attribute.type
+											when 'Bool'
+												if attribute.isList
+													include ../robots/checkboxList.pug
+												else
+													include ../robots/checkbox.pug
+											when 'Code'
+												include ../robots/code.pug
+											when 'Color'
+												if attribute.isList
+													include ../robots/colorList.pug
+												else
+													include ../robots/color.pug
+											when 'Date'
+												if attribute.isList
+													include ../robots/dateList.pug
+												else
+													include ../robots/date.pug
+											when 'Image'
+												if attribute.isList
+													include ../robots/imageList.pug
+												else
+													include ../robots/image.pug
+											when 'Number'
+												if attribute.isList
+													include ../robots/numberList.pug
+												else
+													include ../robots/number.pug
+											when 'Radio'
+												include ../robots/radio.pug
+											when 'Select'
+												if attribute.isList
+													include ../robots/selectList.pug
+												else
+													include ../robots/select.pug
+											when 'Wysiwyg'
+												if attribute.isList
+													include ../robots/wysiwygList.pug
+												else
+													include ../robots/wysiwyg.pug
+											when 'String'
+											default
+												if attribute.isList
+													include ../robots/stringList.pug
+												else
+													include ../robots/string.pug
+
+							.panel-footer.text-right
+								button.btn.btn-primary(duck-button='submit') Save
+			else
+				p.lead You need to create a #[strong Robot Factory] first.
+				
 			h2(data-position='4') Robots
-			p.
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			
+			.panel.panel-default(data-function='accordion', duck-table='Robots', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= uuid())
+				.panel-heading New Robot
+				.panel-body.form-horizontal
+					- name = 'name'; title = 'Name';
+					include ../robots/string.pug
 
+					.form-group
+						label.col-sm-2.control-label Parts
+						.col-sm-10(duck-field='parts', duck-type='array')
+							div
+								.array-item(duck-type='object')
+									.input-group
+										.input-group-addon(data-sort='handle')
+											i.fa.fa-arrows-v(aria-hidden='true')
+										.panel.panel-default(data-function='accordion')
+											.panel-heading(role='tab', aria-expanded='false') Part
+											.panel-body(role='tabpanel', aria-hidden='true')
+												- name = 'name'; title = 'Name';
+												include ../robots/string.pug
+
+												- name = 'factory'; title = 'Factory'; options = factories; valueField='_Id'; displayField='name';
+												include ../robots/select.pug
+
+												- name = 'isOne'; title = 'Is One';
+												include ../robots/checkbox.pug
+
+												.form-group
+													label.col-sm-2.control-label Params
+													.col-sm-10(duck-field='params', duck-type='array')
+														div
+															.array-item(duck-type='object')
+																.input-group
+																	.input-group-addon(data-sort='handle')
+																			i.fa.fa-arrows-v(aria-hidden='true')
+																	select.form-control(duck-field='field', duck-type='select')
+																		option Title
+																	.input-group-addon =
+																	input.form-control(duck-field='value', duck-type='string')
+																	.input-group-btn
+																		button.btn.btn-danger(duck-button='delete')
+																			i.fa.fa-times(aria-hidden='true')
+														p.text-right
+															button.btn.btn-default(duck-button='add') Add Param
+
+										.input-group-btn
+											button.btn.btn-danger(duck-button='delete')
+												i.fa.fa-times(aria-hidden='true')
+							p.text-right
+								button.btn.btn-default(duck-button='add') Add Part
+
+					- name = 'body'; title = 'Body';
+					include ../robots/code.pug
+				.panel-footer.text-right
+					button.btn.btn-primary(duck-button='submit') Save
+
+			for robot in robots ? robots : []
+				.panel.panel-default(data-function='accordion', duck-table='Robots', duck-function='update', duck-key='Id', duck-key-value= robot.Id, duck-range='_Id', duck-range-value= robot._Id)
+					.panel-heading= robot.name
+					.panel-body.form-horizontal
+						- name = 'name'; title = 'Name'; value = robot.name;
+						include ../robots/string.pug
+
+						.form-group
+							label.col-sm-2.control-label Parts
+							.col-sm-10(duck-field='parts', duck-type='array')
+								div
+									for part in robot.parts ? robot.parts : [{}]
+										.array-item(duck-type='object')
+											.input-group
+												.input-group-addon(data-sort='handle')
+													i.fa.fa-arrows-v(aria-hidden='true')
+												.panel.panel-default(data-function='accordion')
+													.panel-heading(role='tab', aria-expanded='false')= part.name
+													.panel-body(role='tabpanel', aria-hidden='true')
+														- name = 'name'; title = 'Name'; value = part.name;
+														include ../robots/string.pug
+
+														- name = 'factory'; title = 'Factory'; options = factories; valueField='_Id'; displayField='name'; value =  part.factory;
+														include ../robots/select.pug
+
+														- name = 'isOne'; title = 'Is One';
+														include ../robots/checkbox.pug
+
+														.form-group
+															label.col-sm-2.control-label Params
+															.col-sm-10(duck-field='params', duck-type='array')
+																div
+																	for param in part.params
+																		.array-item(duck-type='object')
+																			.input-group
+																				.input-group-addon(data-sort='handle')
+																						i.fa.fa-arrows-v(aria-hidden='true')
+																				select.form-control(duck-field='field', duck-type='select')
+																					option Title
+																				.input-group-addon =
+																				input.form-control(duck-field='value', duck-type='string', value= param.value)
+																				.input-group-btn
+																					button.btn.btn-danger(duck-button='delete')
+																						i.fa.fa-times(aria-hidden='true')
+																p.text-right
+																	button.btn.btn-default(duck-button='add') Add Param
+
+												.input-group-btn
+													button.btn.btn-danger(duck-button='delete')
+														i.fa.fa-times(aria-hidden='true')
+								p.text-right
+									button.btn.btn-default(duck-button='add') Add Part
+						
+						- name = 'body'; title = 'Body'; value = robot.body
+						include ../robots/code.pug
+
+					.panel-footer.text-right
+						button.btn.btn-primary(duck-button='submit') Save
 	script.
 		void function initAdminPage($, duck){
 			

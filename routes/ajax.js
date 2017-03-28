@@ -1,14 +1,14 @@
 const express    = require('express');
 const pug        = require('pug');
 const http       = require('http');
-const gm         = require('gm').subClass({
-    imageMagick: true
-});
+const gm         = require('gm').subClass({ imageMagick: true });
 const isLoggedIn = require('../middleware/isLoggedIn');
 const formidable = require('../middleware/formidable');
 const pickTable  = require('../modules/pickTable');
 const s3         = require('../modules/s3');
 const sendEmail  = require('../modules/sendEmail');
+const RobotPart  = require('../schemas/robotPart');
+const Robot      = require('../schemas/robot');
 const router     = express.Router();
 
 //// database ajax calls
@@ -226,11 +226,50 @@ const router     = express.Router();
 	});
 
 //// robot calls
-	router.get('/robot/get', (req, res) => {
-		const robot = req.query.robot;
-		const brain = require(`../robots/${robot.name}/brain`);
+	// TODO: Make this a module
+	function findPart(_parts, params, isOne, pageParams){
+		if (!_parts) {
+			return;
+		}
 
-		res.send(pug.compileFile(`robots/${robot.name}/body.pug`)(brain(robot.data)));
+		const value = params && params[0] && (params[0].value.indexOf(':') === 0 ? pageParams[params[0].field] : params[0].value) || undefined;
+
+		if(params.length === 0) {
+			return isOne ? _parts.findOne().items : _parts.find().items;
+		} else if(params.length === 1) {
+			//console.log(params[0].field, value)
+			//console.log(_parts.findOne(params[0].field, value).items)
+			return isOne ? _parts.findOne(params[0].field, value).items : _parts.find(params[0].field, value).items;
+		} else {
+			const _param = params.shift();
+
+			return findPart(_parts.find(_param.field, value), params, isOne, pageParams);
+		}
+	}
+
+	router.get('/robot/get', (req, res, next) => {
+		const robot = Robot.findOne('_Id', req.query.robot.Id).items;
+		if(!robot) {
+			res.status(404).send('No Robot Found');
+			return;
+		}
+
+		const pageParams = req.query.params;
+
+		robot.parts.forEach((part) => {
+			const _parts = RobotPart.find('Id', part.factory);
+
+			res.locals[part.name] = findPart(_parts, part.params, part.isOne, pageParams);
+		});
+
+		console.log('~~~~~~~~~~~~~~~~~')
+		console.log(robot.body)
+		console.log(res.locals.Post)
+
+		pug.render(robot.body, res.locals, (err, html) => {
+			console.log(err, html);
+			res.send(err ? String(err) : html)
+		});
 	})
 
 //// lambda calls

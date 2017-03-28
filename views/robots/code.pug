@@ -1,0 +1,9 @@
+table.table.table-bordered.mb-0
+	thead
+		tr
+			th.col-xs-6= title || name
+			th.col-xs-6 Preview
+	tbody
+		tr(duck-field= name, duck-type='code')
+			td.p-0(data-function='codemirror', data-mode= mode || 'pug')= value || defaultValue
+			td: div(data-codemirror='preview')

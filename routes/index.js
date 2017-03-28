@@ -6,36 +6,20 @@ const isLoggedIn   = require('../middleware/isLoggedIn');
 const setFlash     = require('../modules/setFlash');
 const sortBy       = require('../modules/sortBy');
 const User         = require('../schemas/user');
+const Page         = require('../schemas/page');
 const RobotFactory = require('../schemas/robotFactory');
+const Robot        = require('../schemas/robot');
 const router       = express.Router();
 
 strategies.local(passport);
 
 router.get('/admin', (req, res) => {
 	res.render('admin/admin', {
+		robots: Robot.cached(),
 		factories: RobotFactory.cached(),
+		pages: Page.cached(),
 	});
 });
-
-router.get('/make-robot-factory', (req, res) => {
-	res.render('make-robot-factory');
-});
-
-router.get('/make-robot-body', (req, res) => {
-	res.render('make-robot-body', {
-		factories: RobotFactory.cached(),
-	});
-});
-
-router.get('/make-robot', (req, res) => {
-	res.render('make-robot', {
-		factories: RobotFactory.cached(),
-	});
-});
-
-/* router.get('/', (req, res, next) => {
-	res.render('index');
-}); */
 
 // authentication
 router.get('/logout', (req, res) => {

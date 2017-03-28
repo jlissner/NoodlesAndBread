@@ -24,6 +24,7 @@
     "express-session": "~1.11.3",
     "formidable": "^1.0.17",
     "gm": "^1.23.0",
+    "jstransformer-markdown-it": "^2.0.0",
     "method-override": "~1.0.0",
     "node-cache": "^3.2.1",
     "nodemailer": "^2.5.0",

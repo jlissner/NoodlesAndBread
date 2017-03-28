@@ -35,23 +35,23 @@ void function initSite($, CodeMirror, SimpleMDE){
 		$site.trigger('homesRegistered');
 	}
 
-	function loadRobot(e, robot) {
+	function loadRobot(e, robot, params) {
 		const $site = e.data.site;
 		const $home = $site.prop('registeredHomes')[robot.home];
 
 		if (!$home.prop('defaultContentRemoved')) {
-			$home.prop('defaultContent', $home.html())
+			$home.prop('defaultContent', ($(`<div>${$home.html()}</div>` || '<div></div>')));
 			$home.html('');
 			$home.prop('defaultContentRemoved', true);
 		}
 
-		const $temp = $($home.prop('defaultContent') || '<div></div>');
+		const $temp = $home.prop('defaultContent');
 
 		$home.append($temp);
 
 		$.ajax({
 			url: '/robot/get',
-			data: {robot},
+			data: {robot, params},
 			success: (data) => {
 				$temp.after(data);
 				$temp.remove();
@@ -63,16 +63,14 @@ void function initSite($, CodeMirror, SimpleMDE){
 		});
 	}
 
-	function loadRobots(e, robots) {
+	function loadRobots(e, robots, params) {
 		e.stopPropagation();
 
 		const $site = e.data.site;
 
 		robots.forEach((robot) => {
-			$site.trigger('loadRobot', robot);
+			$site.trigger('loadRobot', [robot, params]);
 		});
-
-		$site.trigger('robotsLoaded');
 	}
 
 	$(() => {
@@ -91,7 +89,8 @@ void function initSite($, CodeMirror, SimpleMDE){
 			$('.flash-message-container').slideUp(1000);
 		}, 1500);
 
-		// init 3rd Party Elements
+		//// init 3rd Party Elements
+		// init WYSIWYG
 		$('.simpleMDE > textarea').each((i, simpleMDE) => {
 			const $simpleMDE = $(simpleMDE);
 			const _simpleMDE = new SimpleMDE({element: simpleMDE, autoDownloadFontAwesome: false});
@@ -99,7 +98,7 @@ void function initSite($, CodeMirror, SimpleMDE){
 			$simpleMDE.prop('simpleMDE', () => _simpleMDE);
 		});
 
-		// init 3rd Party Elements
+		// init code editor
 		$('[data-function*="codemirror"]').each((i, codemirror) => {
 			const $codemirror = $(codemirror);
 			const val = $codemirror.text();
@@ -150,7 +149,10 @@ void function initSite($, CodeMirror, SimpleMDE){
 			}
 		});
 
+		// init date picker
 		$('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
+
+		// init color picker
 		$('input[type="color"]').spectrum({showInput: true, preferredFormat: "hex"});
 	});	
 	/* eslint-enable */

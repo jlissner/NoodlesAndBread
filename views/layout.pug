@@ -8,26 +8,16 @@ html
 		block content
 			!= layout
 
-		//header.site-header
-			block header
-				div(robot-home="header")
-					include shared/header.pug
-		//main.site-main
-			block content
-
-		//footer.site-footer
-			block footer
-				div(robot-home="footer")
-					include shared/footer.pug
 
 		if robots
 			script.
 				void function initRobots($){
-					const $site = $('#Site');
+					const $site = $('#Noodles');
 					const robots = !{JSON.stringify(robots)};
+					const params = !{JSON.stringify(params)};
 
 					$site.on('homesRegistered', () => {
-						$site.trigger('loadRobots', [robots])
+						$site.trigger('loadRobots', [robots, params])
 					});
 				}(jQuery.noConflict());
 				

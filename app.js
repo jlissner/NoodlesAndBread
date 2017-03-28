@@ -10,16 +10,15 @@ const cookieParser     = require('cookie-parser');
 const bodyParser       = require('body-parser');
 const session          = require('cookie-session');
 const getUser          = require('./middleware/getUser');
-const route            = require('./middleware/route');
 const isLoggedIn       = require('./middleware/isLoggedIn');
 const globalLocals     = require('./middleware/globalLocals');
 const setFlash         = require('./modules/setFlash');
 const routes           = require('./routes/index');
 const ajax             = require('./routes/ajax');
-const admin            = require('./routes/admin');
+const routing          = require('./routes/routing');
 const User             = require('./schemas/user');
 const RobotFactory     = require('./schemas/robotFactory');
-const RobotBody        = require('./schemas/robotBody');
+const RobotPart        = require('./schemas/robotPart');
 const Robot            = require('./schemas/robot');
 const Site             = require('./schemas/site');
 const Page             = require('./schemas/page');
@@ -98,7 +97,7 @@ app.use(
     Site.getCached(),
     Page.getCached(),
     RobotFactory.getCached(),
-    RobotBody.getCached(),
+    RobotPart.getCached(),
     Robot.getCached(),
     globalLocals // set variables and functions to be used on all views, mainly helper functions
 );
@@ -110,8 +109,10 @@ app.use('/', ajax);
 app.use('/', routes);
 
 // route based on url if possible
-app.use(route);
+app.use('/', routing);
 
+
+app.use('/', express.Router())
 // error handlers /////////////////////////////////////////////////////
 
 app.use((req, res, next) => {console.log('~~ on to errors ~~'); next()})
@@ -119,13 +120,10 @@ app.use((req, res, next) => {console.log('~~ on to errors ~~'); next()})
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
-    console.error(req);
+    console.error('Not Found: ', req.url);
     err.status = 404;
-    console.error('~~~~~~~~~~');
-    //next(err);
-
     req.flash('error', 'Sorry, that page doesn\'t exist.')
-    res.redirect('/')
+    next(err);
 });
 
 // development error handler
@@ -133,7 +131,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
-        console.log(err);
+        console.log('err');
         res.render('error', {
             message: err.message,
             error: err

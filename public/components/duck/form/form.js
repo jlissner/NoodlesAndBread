@@ -45,8 +45,9 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 			$clone.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
 			$clone.find('[duck-type="array"] > [duck-type]:not(:first-of-type)').remove();
 			$clone.find('[duck-button="add"]').click(addArrayItem);
-			$clone.find('[duck-type="code"]').each(() => {
-				const $codemirror = $clone.find('[data-function*="codemirror"]');
+			$clone.find('[data-function*="accordion"]').makeAccordion();
+			$clone.find('[duck-type="code"]').each((i, _code) => {
+				const $codemirror = $(_code).find('[data-function*="codemirror"]');
 				$codemirror.html('')
 				const codemirror = $codemirror[0];
 				const $preview = $codemirror.parent().find('[data-codemirror="preview"]');
@@ -91,7 +92,16 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 						
 					})
 				}
-			})
+			});
+			$clone.find('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
+
+			$clone.find('[duck-type="wysiwyg"]').each((i, wysiwyg) => {
+				const $wysiwyg = $(wysiwyg);
+				const $newSimpleMDE = $wysiwyg.find('.simpleMDE').html('<textarea/>').find('textarea'); // clear out the html that was there and replace it with a fresh textarea, then select that text area
+
+				const _simpleMDE = new SimpleMDE({element: $newSimpleMDE[0], autoDownloadFontAwesome: false});
+				$newSimpleMDE.prop('simpleMDE', () => _simpleMDE);
+			});
 		}
 
 		if($item.attr('duck-type') === 'image') {
@@ -103,15 +113,15 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 		}
 
 		if($item.attr('duck-type') === 'date') {
-			$clone.datetimepicker({format: 'MM/DD/YYYY'});
+			$clone.find('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
 		}
-
 		
 
 		if($item.attr('duck-type') === 'wysiwyg') {
-			const _simpleMDE = new SimpleMDE({element: $clone.find('.simpleMDE').html('<textarea>').find('textarea')[0], autoDownloadFontAwesome: false});
+			const $newSimpleMDE = $clone.find('.simpleMDE').html('<textarea>').find('textarea');
+			const _simpleMDE = new SimpleMDE({element: $newSimpleMDE[0], autoDownloadFontAwesome: false});
 
-			$clone.find('.simpleMDE').prop('simpleMDE', () => _simpleMDE);
+			$newSimpleMDE.prop('simpleMDE', () => _simpleMDE);
 		}
 
 		if($item.attr('duck-type') === 'code') {
@@ -282,8 +292,7 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 	}
 
 	function parseWysiwyg(obj, $item, fieldName) {
-		const wysiwyg = '.simpleMDE > textarea';
-		const value = $item.find(wysiwyg).prop('simpleMDE').value();
+		const value = $item.find('.simpleMDE > textarea').prop('simpleMDE').value();
 
 		if(value){
 			obj[fieldName] = value;

@@ -3,7 +3,7 @@ const Duck = require('../modules/duck');
 const RobotFactory = Duck({
 	Table: 'NoodlesRobotFactories',
 	Item: {
-		Id: String,
+		Id: String, // Site Id
 		_Id: String,
 		name: String,
 		schema: [{
@@ -12,7 +12,6 @@ const RobotFactory = Duck({
 			defaultValue: String, // can also be array
 			options: Array,
 			isList: String,
-			_Id: String, // id of other robot, only used when type === "Robot"
 		}],
 	},
 	

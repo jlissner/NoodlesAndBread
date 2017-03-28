@@ -2,15 +2,16 @@ const pug  = require('pug');
 const uuid = require('uuid');
 const Site = require('../schemas/site');
 const Page = require('../schemas/page');
+const RobotFactory = require('../schemas/robotFactory');
 
 module.exports = (req, res, next) => {
 	const url = req._parsedOriginalUrl ? req._parsedOriginalUrl.pathname : req._parsedUrl.pathname
+	const urlParts = url.split('/');
 	const site = Site.find().items[0];
-	const page = Page.findOne('url', url).items;
 
 	res.locals.uuid = uuid;
 	res.locals.site = site;
-	res.locals.page = page;
+	res.locals.factories = RobotFactory.cached();
 
 	// TODO: Cache Controls
 	if(site.controls) {

@@ -3,25 +3,16 @@ const Duck = require('../modules/duck');
 const Page = Duck({
 	Table: 'NoodlesPages',
 	Item: {
-		Id: String,
+		Id: String, // Site Id
 		_Id: String,
 		url: String,
 		layout: String,
 		name: String,
 		title: String,
 		description: String,
-		factory: [{
-			Id: String,
-			home: String,
-		}],
 		robots: [{
-			id: String,
+			Id: String, // robot _Id
 			home: String,
-			paint: String,
-			data: [{
-				hash: String,
-				range: String,
-			}],
 		}],
 	},
 	

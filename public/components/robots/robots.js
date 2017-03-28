@@ -105,7 +105,6 @@ void function initRobots($, duck){
 		}
 
 		function saveFactory(e) {
-			console.log('triggered');
 			e.stopPropagation();
 			e.preventDefault();
 
@@ -123,7 +122,7 @@ void function initRobots($, duck){
 					schema: attributes,
 				}
 
-				RobotFactories.add(newFactory, $.noop, (err) => {console.error(err)});
+				RobotFactories.add(newFactory, $.noop, $.noop);
 			}
 
 			$saveFactory.prop('disabled', false);
@@ -166,8 +165,12 @@ void function initRobots($, duck){
 		$(() => {
 			initFactory("[robot-factory='factory']");
 		});
+
+	// Robot
+		//const $site = $('#Noodles');
+
+		//$site.on('')
 }(jQuery.noConflict(), duck)
 
 // Body
 
-// Robot

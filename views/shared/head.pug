@@ -13,7 +13,7 @@ head
 			link(rel="stylesheet", href=style.src)
 
 	// hosted local
-	link(rel='stylesheet', href='3rdParty/codemirror/codemirror.css')
+	link(rel='stylesheet', href='/3rdParty/codemirror/codemirror.css')
 	link(rel='stylesheet', href='/styles/font-awesome/css/font-awesome.min.css', type='text/css')
 	link(rel='stylesheet', href='/styles/styles.css', type='text/css')
 
@@ -47,7 +47,7 @@ head
 	script(type='text/javascript', src='/components/toggle/toggle.min.js')
 	if (user && user.isAdmin)
 		script(type='text/javascript', src='/components/duck/filepicker/filepicker.min.js')
-		script(type='text/javascript', src='/components/duck/form/form.min.js')
+		script(type='text/javascript', src='/components/duck/form/form.js')
 		script(type='text/javascript', src='/components/validateForm/validateForm.min.js')
 	
 	script(type='text/javascript', src='/js/scripts.js')

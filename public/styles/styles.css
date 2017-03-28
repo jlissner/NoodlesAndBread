@@ -2588,6 +2588,12 @@ fieldset[disabled] .btn-danger.focus {
   color: #d9534f;
   background-color: #fff;
 }
+.btn-edit {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  border: 1px solid #ccc;
+}
 .btn-link {
   color: #337ab7;
   font-weight: normal;

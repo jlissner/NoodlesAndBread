@@ -1,6 +1,6 @@
 const User         = require('../schemas/user');
 const RobotFactory = require('../schemas/robotFactory');
-const RobotBody    = require('../schemas/robotBody');
+const RobotPart    = require('../schemas/robotPart');
 const Robot        = require('../schemas/robot');
 const Site         = require('../schemas/site');
 const Page         = require('../schemas/page');
@@ -13,8 +13,8 @@ function pickTable(table) {
 		case 'RobotFactories': {
 			return RobotFactory;
 		}
-		case 'RobotBodies': {
-			return RobotBody;
+		case 'RobotParts': {
+			return RobotPart;
 		}
 		case 'Robots': {
 			return Robot;
