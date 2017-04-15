@@ -172,7 +172,7 @@ block content
 						button.btn.btn-default(duck-button='add') Add Control
 
 			h2(data-position='1') Pages
-			.panel.panel-default(duck-table='Pages', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= uuid())
+			.panel.panel-info(duck-table='Pages', duck-function='add', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= uuid())
 				.panel-heading New Page
 				.panel-body
 					.form-horizontal
@@ -192,14 +192,14 @@ block content
 					button.btn.btn-primary(duck-button='submit', type='submit') Save
 
 			for page in pages ? pages : []
-				.panel.panel-default(duck-table='Pages', duck-function='update', duck-key='Id', duck-key-value= site.Id, duck-range='_Id', duck-range-value= page._Id)
+				.panel.panel-default(duck-table='Pages', duck-function='update', duck-key='Id', duck-key-value= page.Id, duck-range='_Id', duck-range-value= page._Id)
 					.panel-heading= page.name
 					.panel-body
 						.form-horizontal
 							- name = 'name'; title = 'Name'; value = null; var required = true; value = page.name;
 							include ../robots/string.pug
 
-							- name = 'url'; title = 'URL';  value = page.url;
+							- name = 'url'; title = 'URL'; value = page.url;
 							include ../robots/string.pug
 
 							- name = 'layout'; title = 'Layout'; options = site.layouts; var valueField = 'name'; value = page.layout;
@@ -233,6 +233,7 @@ block content
 										button.btn.btn-default(duck-button='add') Add Robot
 
 					.panel-footer.text-right
+						button.btn.btn-danger(duck-button='delete', type='submit') Delete
 						button.btn.btn-primary(duck-button='submit', type='submit') Save
 
 			h2(data-position='2') Factories
@@ -417,7 +418,7 @@ block content
 			for factory, i in factories ? factories : []
 				h3(data-position=`4.${i}`)= factory.name
 				.panel.panel-default(data-function='accordion', duck-table='RobotParts', duck-function='add', duck-key='Id', duck-key-value= factory._Id, duck-range='_Id', duck-range-value= uuid())
-						.panel-heading(role='tab', aria-expanded= 'true') New Robot
+						.panel-heading(role='tab', aria-expanded= 'true') New Part
 						div(role='tabpanel', aria-hidden= 'false')
 							.panel-body
 								.form-horizontal
@@ -473,7 +474,7 @@ block content
 							.panel-footer.text-right
 								button.btn.btn-primary(duck-button='submit') Save
 
-				- var factoryParts = parts && parts.filter((_part) => (_part.Id === factory.Id));
+				- var factoryParts = parts && parts.filter((_part) => (_part.Id === factory._Id));
 				for part in factoryParts ? factoryParts : []
 					.panel.panel-default(data-function='accordion', duck-table='RobotParts', duck-function='update', duck-key='Id', duck-key-value= part.Id, duck-range='_Id', duck-range-value= part._Id)
 						.panel-heading(role='tab', aria-expanded= 'false')= part.name || 'Unnamed'
@@ -622,7 +623,7 @@ block content
 															label.col-sm-2.control-label Params
 															.col-sm-10(duck-field='params', duck-type='array')
 																div
-																	for param in part.params
+																	for param in part.params ? part.params : [{}]
 																		.array-item(duck-type='object')
 																			.input-group
 																				.input-group-addon(data-sort='handle')
