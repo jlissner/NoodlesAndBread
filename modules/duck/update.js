@@ -79,7 +79,7 @@ const readJSON      = require('../readJSON');
 		for (item in flattenedData){
 			if(item !== key && item !== range) {
 				// 'a.b.c' => 'a.#b.#c'
-				const concatinatedExpression = item.replace('.', '.#');
+				const concatinatedExpression = item.replace('.', '.#').replace(/ /g, '_');
 				const arr = item.split('.');
 				const arrLength = arr.length;
 
@@ -87,7 +87,7 @@ const readJSON      = require('../readJSON');
 				
 				for(let i = 0; i < arrLength; i++){
 					if (!params.ExpressionAttributeNames[`#${arr[i]}`]) {
-						params.ExpressionAttributeNames[`#${arr[i]}`] = arr[i];
+						params.ExpressionAttributeNames[`#${arr[i].replace(/ /g, '_')}`] = arr[i];
 					}
 				}
 
