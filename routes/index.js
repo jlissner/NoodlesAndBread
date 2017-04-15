@@ -8,6 +8,7 @@ const sortBy       = require('../modules/sortBy');
 const User         = require('../schemas/user');
 const Page         = require('../schemas/page');
 const RobotFactory = require('../schemas/robotFactory');
+const RobotPart    = require('../schemas/robotPart');
 const Robot        = require('../schemas/robot');
 const router       = express.Router();
 
@@ -17,6 +18,7 @@ router.get('/admin', (req, res) => {
 	res.render('admin/admin', {
 		robots: Robot.cached(),
 		factories: RobotFactory.cached(),
+		parts: RobotPart.cached(),
 		pages: Page.cached(),
 	});
 });
