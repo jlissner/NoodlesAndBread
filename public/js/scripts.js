@@ -90,13 +90,16 @@ void function initSite($, CodeMirror, SimpleMDE){
 		}, 1500);
 
 		//// init 3rd Party Elements
-		// init WYSIWYG
+		// init simpleMDE
 		$('.simpleMDE > textarea').each((i, simpleMDE) => {
 			const $simpleMDE = $(simpleMDE);
 			const _simpleMDE = new SimpleMDE({element: simpleMDE, autoDownloadFontAwesome: false});
 
 			$simpleMDE.prop('simpleMDE', () => _simpleMDE);
 		});
+
+		// init summernote
+		$('.summernote').summernote({height: '150px'});
 
 		// init code editor
 		$('[data-function*="codemirror"]').each((i, codemirror) => {
