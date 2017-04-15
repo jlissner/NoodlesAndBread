@@ -2246,6 +2246,9 @@ a.btn.disabled,
 fieldset[disabled] a.btn {
   pointer-events: none;
 }
+.btn + .btn {
+  margin-left: 5px;
+}
 .btn-default {
   color: #333;
   background-color: #fff;
@@ -6147,6 +6150,9 @@ fieldset[disabled] .sp-container button {
 a.sp-container button.disabled,
 fieldset[disabled] a.sp-container button {
   pointer-events: none;
+}
+.sp-container button + .btn {
+  margin-left: 5px;
 }
 .sp-container button:focus,
 .sp-container button.focus {
