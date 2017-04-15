@@ -1,5 +1,4 @@
 .form-group(duck-type='wysiwyg' duck-field=name)
 	label.col-sm-2.control-label= title || name
 	.col-sm-10
-		.simpleMDE
-			textarea(required= required)= value
+		.summernote!= value

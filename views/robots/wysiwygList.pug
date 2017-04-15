@@ -7,8 +7,7 @@
 					.input-group
 						.input-group-addon(data-sort='handle')
 							i.fa.fa-arrows-v(aria-hidden='true')
-						.simpleMDE
-							textarea(required= required)= v
+						.summernote!= v
 						.input-group-btn
 							button.btn.btn-danger(duck-button='delete')
 								i.fa.fa-times(aria-hidden='true')
