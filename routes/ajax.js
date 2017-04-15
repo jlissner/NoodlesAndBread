@@ -67,7 +67,6 @@ const router     = express.Router();
 	});
 
 	router.post('/update/:table', isLoggedIn(true), (req, res) => {
-		console.log('here')
 		const item = req.body.item;
 		const table = pickTable(req.params.table);
 
@@ -237,8 +236,6 @@ const router     = express.Router();
 		if(params.length === 0) {
 			return isOne ? _parts.findOne().items : _parts.find().items;
 		} else if(params.length === 1) {
-			//console.log(params[0].field, value)
-			//console.log(_parts.findOne(params[0].field, value).items)
 			return isOne ? _parts.findOne(params[0].field, value).items : _parts.find(params[0].field, value).items;
 		} else {
 			const _param = params.shift();
@@ -262,12 +259,7 @@ const router     = express.Router();
 			res.locals[part.name] = findPart(_parts, part.params, part.isOne, pageParams);
 		});
 
-		console.log('~~~~~~~~~~~~~~~~~')
-		console.log(robot.body)
-		console.log(res.locals.Post)
-
 		pug.render(robot.body, res.locals, (err, html) => {
-			console.log(err, html);
 			res.send(err ? String(err) : html)
 		});
 	})
