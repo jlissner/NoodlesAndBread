@@ -126,12 +126,12 @@ void function initDuck($){
 		// -- (dynamic)value - matches the type the field represents
 		// -- (bool)findOne - if true, returns at most 1 item
 		// if no options are passed in, return all items in provided table
-		this.get = (options, success, error) => {
+		this.get = (hash, range, options, success, error) => {
 			$.ajax({
 				url: `/get/${table}`,
 				contentType: 'json',
 				dataType: 'json',
-				data: options,
+				data: {hash: {key: hash.key, value: hash.value}, range: {key: range.key, value: range.value}, options},
 				success,
 				error,
 			});
@@ -150,12 +150,12 @@ void function initDuck($){
 		}
 
 		// (string)id is which item will be deleted from the provided table
-		this.delete = (id, success, error) => {
+		this.delete = (hash, range, success, error) => {
 			$.ajax({
 				url: `/delete/${table}`,
 				contentType: 'application/json',
 				method: 'POST',
-				data: JSON.stringify({key: id}),
+				data: JSON.stringify({hash: {key: hash.key, value: hash.value}, range: {key: range.key, value: range.value}}),
 				success,
 				error,
 			});

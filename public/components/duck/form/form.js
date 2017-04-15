@@ -38,104 +38,24 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 		}
 
 		$clone.find('[duck-value], [duck-type="wysiwyg"]').val(null);
+		$clone.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+		$clone.find('[data-sort="item"]:not(:first-of-type)').remove();
 		$clone.find('[duck-button="delete"]').click(deleteArrayItem);
+		$clone.find('[duck-button="add"]').click(addArrayItem);
 		$clone.find('[data-function="tabs"]').makeTabs();
-
-		if($item.attr('duck-type') === 'object'){
-			$clone.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
-			$clone.find('[duck-type="array"] > [duck-type]:not(:first-of-type)').remove();
-			$clone.find('[duck-button="add"]').click(addArrayItem);
-			$clone.find('[data-function*="accordion"]').makeAccordion();
-			$clone.find('[duck-type="code"]').each((i, _code) => {
-				const $codemirror = $(_code).find('[data-function*="codemirror"]');
-				$codemirror.html('')
-				const codemirror = $codemirror[0];
-				const $preview = $codemirror.parent().find('[data-codemirror="preview"]');
-				$preview.html('');
-				const _codemirror = CodeMirror(codemirror, {
-						smartIndent: true,
-						indentWithTabs: true,
-						lineNumbers: true,
-						mode: $codemirror.attr('data-mode') || 'pug',
-				});
-
-				if(!$codemirror.is(':visible')) {
-					const refresh = setInterval(() => {
-						if($codemirror.is(':visible')) {
-							_codemirror.refresh();
-							clearTimeout(refresh);
-						}
-					}, 250);
-				}
-
-				$codemirror.prop('codemirror', () => _codemirror);
-
-				if($preview.length) {
-					let doPreview;
-
-					$codemirror.on('input', (_e) => {
-						_e.stopPropagation();
-						_e.preventDefault();
-
-						clearTimeout(doPreview);
-						doPreview = setTimeout(() => {
-							$.ajax({
-								url: '/renderPug',
-								data: {pug: $codemirror.prop('codemirror').getValue(), locals: {}},
-								success: (data) => {
-									$preview.html(data);
-								},
-							});
-						}, 1000)
-						//if()
-
-						
-					})
-				}
-			});
-			$clone.find('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
-
-			$clone.find('[duck-type="wysiwyg"]').each((i, wysiwyg) => {
-				const $wysiwyg = $(wysiwyg);
-				const $newSimpleMDE = $wysiwyg.find('.simpleMDE').html('<textarea/>').find('textarea'); // clear out the html that was there and replace it with a fresh textarea, then select that text area
-
-				const _simpleMDE = new SimpleMDE({element: $newSimpleMDE[0], autoDownloadFontAwesome: false});
-				$newSimpleMDE.prop('simpleMDE', () => _simpleMDE);
-			});
-		}
-
-		if($item.attr('duck-type') === 'image') {
-			$clone.find('[duck-image-value]').text('This isn\'t working yet.');
-		}
-
-		if($item.attr('duck-type') === 'color') {
-			$clone.spectrum({showInput: true, preferredFormat: "hex"});
-		}
-
-		if($item.attr('duck-type') === 'date') {
-			$clone.find('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
-		}
-		
-
-		if($item.attr('duck-type') === 'wysiwyg') {
-			const $newSimpleMDE = $clone.find('.simpleMDE').html('<textarea>').find('textarea');
-			const _simpleMDE = new SimpleMDE({element: $newSimpleMDE[0], autoDownloadFontAwesome: false});
-
-			$newSimpleMDE.prop('simpleMDE', () => _simpleMDE);
-		}
-
-		if($item.attr('duck-type') === 'code') {
-			const $codemirror = $clone.find('[data-function*="codemirror"]');
+		$clone.find('[data-function*="accordion"]').makeAccordion();
+		$clone.find('[duck-type="code"]').each((i, _code) => {
+			const $codemirror = $(_code).find('[data-function*="codemirror"]');
+			$codemirror.html('')
 			const codemirror = $codemirror[0];
-			const previewTarget = $codemirror.attr('data-preview-target');
+			const $preview = $codemirror.parent().find('[data-codemirror="preview"]');
+			$preview.html('');
 			const _codemirror = CodeMirror(codemirror, {
 					smartIndent: true,
 					indentWithTabs: true,
 					lineNumbers: true,
 					mode: $codemirror.attr('data-mode') || 'pug',
 			});
-
-
 
 			if(!$codemirror.is(':visible')) {
 				const refresh = setInterval(() => {
@@ -148,9 +68,7 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 
 			$codemirror.prop('codemirror', () => _codemirror);
 
-			if(previewTarget) {
-				const $preview = $(previewTarget);
-
+			if($preview.length) {
 				let doPreview;
 
 				$codemirror.on('input', (_e) => {
@@ -166,13 +84,15 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 								$preview.html(data);
 							},
 						});
-					}, 1000)
-					//if()
-
-					
-				})
+					}, 1000);
+				});
 			}
-		}
+		});
+		$clone.find('[duck-image-value]').text('This isn\'t working yet.');
+		$clone.find('input[type="color"]').spectrum({showInput: true, preferredFormat: "hex"});
+		$clone.find('.bs-date').datetimepicker({format: 'MM/DD/YYYY'});
+		$clone.find('.summernote').summernote('destroy').summernote({height: '150px'});
+
 
 		$item.parent().sortable('[duck-type]');
 
@@ -292,7 +212,7 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 	}
 
 	function parseWysiwyg(obj, $item, fieldName) {
-		const value = $item.find('.simpleMDE > textarea').prop('simpleMDE').value();
+		const value = $item.find('.summernote').summernote('code');
 
 		if(value){
 			obj[fieldName] = value;
@@ -370,12 +290,6 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 		return obj;
 	}
 
-	function autoSetUrl($urlField, $urlFromField) {
-		$urlFromField.on('input', () => {
-			$urlField.val($urlFromField.val().replace(/'/g, '').replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()).trigger('validate');
-		});
-	}
-
 	function addItem(table, key, keyValue, range, rangeValue, $startOfFields, successCallback, failureCallBack) {
 		const item = {};
 		item[key] = keyValue || duck.uuid();
@@ -394,7 +308,7 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 		});
 	}
 
-	function deleteItem(table, key, keyValue, $wrapper) {
+	function deleteItem(table, key, keyValue, range, rangeValue, $wrapper) {
 		duck(table).delete(keyValue, () => {
 			const currentLocation = window.location.href.split('/');
 			const goTo = $wrapper.attr('duck-goTo');
@@ -486,29 +400,25 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 		const $wrapper = $(wrapper);
 		const $startOfFields = duck.findRelevantChildren($wrapper, '[duck-field]');
 		const $editButton = $wrapper.find('[duck-button="edit"]');
-		const $cancelButton = $wrapper.find('[duck-button="cancel"]');
+		
 		const table = (options && options.table) || $wrapper.attr('duck-table');
 		const crud = (options && options.crud) || $wrapper.attr('duck-function');
-		const key = (options && options.key) || $wrapper.attr('duck-key');
+		
+		const key = (options && options.key) || $wrapper.attr('duck-key') || 'Id';
 		const keyValue = (options && options.keyValue) || $wrapper.attr('duck-key-value');
-		const range = (options && options.range) || $wrapper.attr('duck-range');
+		
+		const range = (options && options.range) || $wrapper.attr('duck-range') || '_Id';
 		const rangeValue = range && ((options && options.rangeValue) || $wrapper.attr('duck-range-value'));
-		const $urlField = $wrapper.find('[duck-field="url"] input');
+		
 		const successCallback = (options && options.successCallback) || (() => {window.location.reload(true)});
 		const failureCallBack = (options && options.failureCallBack) || (() => {window.location.reload(true)});
 
-		if($urlField.length){
-			autoSetUrl($urlField, $wrapper.find('[duck-field="names"] [duck-field="display"] input'));
-		}
-
 		if(!table || !crud || !key || ((crud === 'update' || crud === 'delete') && !keyValue)) {
-			return; // need to have a table, key, and it's function set, and must have key value if it's for an update or delete
+			throw new Error('Missing Required information.'); // need to have a table, key, and it's function set, and must have key value if it's for an update or delete
 		}
 
 		$editButton.off('click', editForm)
 				.on('click', {wrapper: $wrapper}, editForm);
-		$cancelButton.off('click', editForm)
-					.on('click', {wrapper: $wrapper}, editForm);
 
 		// set what happens when the submit button is clicked
 		$wrapper.off('click', submitForm)
