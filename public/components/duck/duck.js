@@ -111,11 +111,15 @@ void function initDuck($){
 		// -- (dynamic)value - matches the type the field represents
 		// -- (bool)findOne - if true, returns at most 1 item
 		// if no options are passed in, return how many items are in the table
-		this.exists = (options, success, error) => {
+		this.exists = (hash, range, options, success, error) => {
+			const query = {};
+			query[hash.key] = hash.value;
+			query[range.key] = range.value;
+
 			$.ajax({
 				url: `/exists/${table}`,
 				contentType: 'json',
-				data: options,
+				data: {query, options},
 				success,
 				error,
 			});
@@ -127,11 +131,15 @@ void function initDuck($){
 		// -- (bool)findOne - if true, returns at most 1 item
 		// if no options are passed in, return all items in provided table
 		this.get = (hash, range, options, success, error) => {
+			const query = {};
+			query[hash.key] = hash.value;
+			query[range.key] = range.value;
+
 			$.ajax({
 				url: `/get/${table}`,
 				contentType: 'json',
 				dataType: 'json',
-				data: {hash: {key: hash.key, value: hash.value}, range: {key: range.key, value: range.value}, options},
+				data: {query, options},
 				success,
 				error,
 			});

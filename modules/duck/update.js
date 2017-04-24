@@ -160,9 +160,9 @@ const readJSON      = require('../readJSON');
     ReAssign - bool - change object from { a.b: 'foo'} to { a: { b: 'foo' }}
 	TODO make it work with HASH-RANGE keys*/
 
-    function updateItem(data, reAssign, table, schema, key, range, oldItem, schemaless) {
-    	return new Promise((resolve, reject) => {
-    		if(!schemaless && !checkSchema(data, reAssign, schema, table)) {
+	function updateItem(data, reAssign, table, schema, key, range, oldItem, schemaless) {
+		return new Promise((resolve, reject) => {
+			if(!schemaless && !checkSchema(data, reAssign, schema, table)) {
 				reject('Mismatch of data types');
 				return;
 			}
@@ -174,8 +174,50 @@ const readJSON      = require('../readJSON');
 			} else {
 				finalUpdate(table, key, range, data, resolve, reject);
 			}
-    	})
-    }
+		})
+	}
+
+	function getOldItems(_this, data, key, range, bulkUpdate) {
+		return new Promise((resolve, reject) => {
+			if(!bulkUpdate) {
+				const params = {}
+				params[key] = data[key];
+
+				if(range) {
+					params[range] = data[range];    			
+				}
+
+				_this.findOne(params).then((duck) => {
+					resolve(duck.items);
+				}, (err) => {
+					reject(err)
+				});
+			} else {
+				const oldItems = [];
+				const length = data.length;
+				let counter = 0;
+
+				for(let i = 0; i < length; i++) {
+					const params = {};
+					params[key] = data[i][key];
+
+					if(range) {
+						params[range] = data[i][range];    			
+					}
+
+					_this.findOne(params, true).then((duck) => {
+						oldItems[data[i][key]] = duck.items;
+
+						if (counter === length -1) {
+							resolve(oldItems);
+						}
+					}, (err) => {
+						reject(err)
+					});
+				}
+			}
+		});
+	}
 
 /*  update
 	updates one or many items
@@ -188,7 +230,7 @@ const readJSON      = require('../readJSON');
 		const range = this.range;
 		const schemaless = this.schemaless
 		const bulkUpdate = data instanceof Array;
-		const oldItem = bulkUpdate ? [] : this.findOne(key, data[key]).items;
+		/*const oldItem = bulkUpdate ? [] : this.findOne(key, data[key]).items;
 		
 		if(bulkUpdate) {
 			const length = data.length;
@@ -196,28 +238,32 @@ const readJSON      = require('../readJSON');
 			for(let i = 0; i < length; i++) {
 				oldItem[data[i][key]] = this.findOne(key, data[i][key]).items;
 			}
-		}
+		}*/
 
 		return new Promise((resolve, reject) => {
-			if(bulkUpdate) {
-				void function updates(item) {
-					updateItem(item, reAssign, table, schema, key, range, oldItem[item[key]], schemaless).then((success) => {
-						if (data.length) {
-							updates(data.shift())
-						} else {
-							resolve(success)
-						}
-					}, (error) => {
-						reject(error)
+			getOldItems(this, data, key, range, bulkUpdate).then((oldItem) => {
+				if(bulkUpdate) {
+					void function updates(item) {
+						updateItem(item, reAssign, table, schema, key, range, oldItem[item[key]], schemaless).then((success) => {
+							if (data.length) {
+								updates(data.shift())
+							} else {
+								resolve(success)
+							}
+						}, (err) => {
+							reject(err)
+						});
+					}(data.shift())
+				} else {
+					updateItem(data, reAssign, table, schema, key, range, oldItem, schemaless).then((success) => {
+						resolve(success)
+					}, (err) => {
+						reject(err)
 					});
-				}(data.shift())
-			} else {
-				updateItem(data, reAssign, table, schema, key, range, oldItem, schemaless).then((success) => {
-					resolve(success)
-				}, (error) => {
-					reject(error)
-				});
-			}
+				}
+			}, (err) => {
+				reject(err)
+			});
 		});
 	}
 
@@ -254,6 +300,4 @@ module.exports = update;
 	    ReturnItemCollectionMetrics: 'NONE', // optional (NONE | SIZE)
 	};
 	dynamodb.updateItem(params, function(err, data) {
-	    if (err) console.log(err); // an error occurred
-	    else console.log(data); // successful response
 	}); */

@@ -4,6 +4,7 @@ const http       = require('http');
 const gm         = require('gm').subClass({ imageMagick: true });
 const isLoggedIn = require('../middleware/isLoggedIn');
 const formidable = require('../middleware/formidable');
+const cache      = require('../modules/cache');
 const pickTable  = require('../modules/pickTable');
 const s3         = require('../modules/s3');
 const sendEmail  = require('../modules/sendEmail');
@@ -14,8 +15,7 @@ const router     = express.Router();
 //// database ajax calls
 	// used to see if (an) item(s) exist without returning the data of the items
 	router.get('/exists/:table', (req, res) => {
-		const field = req.query.field;
-		const value = req.query.value;
+		const query = req.query.query;
 		const findOne = req.query.findOne;
 		const table = pickTable(req.params.table);
 
@@ -24,14 +24,19 @@ const router     = express.Router();
 			return;
 		}
 
-		const items = findOne ? table.findOne(field, value).items : table.find(field, value).items;
-
-		res.send(items.length.toString());
+		if(findOne) {
+			table.findOne(params).then((duck) => {
+				res.send(duck.items.length.toString());
+			});
+		} else {
+			table.find(params).then((duck) => {
+				res.send(duck.items.length.toString());
+			});
+		}
 	});
 
 	router.get('/get/:table', isLoggedIn(true), (req, res) => {
-		const field = req.query.field;
-		const value = req.query.value;
+		const query = req.query.query;
 		const findOne = req.query.findOne;
 		const table = pickTable(req.params.table);
 
@@ -40,9 +45,19 @@ const router     = express.Router();
 			return;
 		}
 
-		const items = findOne ? table.findOne(field, value).items : table.find(field, value).items;
-
-		res.send(items);
+		if(findOne) {
+			table.findOne(query).then((duck) => {
+				res.send(duck.items);
+			}, (err) => {
+				console.error(err);
+			});
+		} else {
+			table.find(query).then((duck) => {
+				res.send(duck.items);
+			}, (err) => {
+				console.error(err);
+			});
+		}
 	});
 
 	router.post('/add/:table', isLoggedIn(true), (req, res) => {
@@ -57,9 +72,7 @@ const router     = express.Router();
 
 		table.add(item)
 		.then(() => {
-			table.updateCache().then(() => {
-				res.send(item);
-			});
+			res.send(item);
 		}, (err) => {
 			console.error(err);
 			res.status(500).send(err);
@@ -76,15 +89,16 @@ const router     = express.Router();
 			return;
 		}
 
-		table.update(item)
-			.then(() => {
-				table.updateCache().then(() => {
-					res.send(item);
-				});
-			}, (err) => {
-				console.error(err);
-				res.status(500).send(err);
-			});
+		table.update(item).then(() => {
+			if(req.params.table === 'Sites') {
+				cache.del('site')	
+			}
+			
+			res.send(item);
+		}, (err) => {
+			console.error(err);
+			res.status(500).send(err);
+		});
 	});
 
 	router.post('/delete/:table', isLoggedIn(true), (req, res) => {
@@ -226,6 +240,7 @@ const router     = express.Router();
 
 //// robot calls
 	// TODO: Make this a module
+	/*
 	function findPart(_parts, params, isOne, pageParams){
 		if (!_parts) {
 			return;
@@ -281,6 +296,6 @@ const router     = express.Router();
 			console.log(err)
 			next();
 		}
-	})
+	})*/
 
 module.exports = router;

@@ -14,10 +14,10 @@ html
 				void function initRobots($){
 					const $site = $('#Noodles');
 					const robots = !{JSON.stringify(robots)};
-					const params = !{JSON.stringify(params)};
+					//const params = !{JSON.stringify(params)};
 
 					$site.on('homesRegistered', () => {
-						$site.trigger('loadRobots', [robots, params])
+						//$site.trigger('loadRobots', [robots])
 					});
 				}(jQuery.noConflict());
 				

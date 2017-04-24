@@ -25,7 +25,6 @@ const _duck = function(schema, items, isReady){
 		this.uniqueBy      = schema.UniqueBy;
 		this.items         = items;
 
-
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~ */
 	/* ~~~~~~~~~ Init ~~~~~~~~~ */
 	/* ~~~~~~~~~~~~~~~~~~~~~~~~ */

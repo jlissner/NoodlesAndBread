@@ -15,7 +15,11 @@ module.exports = function(_duck){
 			} else{
 				//console.log(`${table} is not cached`);
 
-				Duck.updateCache().then(function(){
+				cache.set(table, Duck.find().items)
+					next();
+
+				/*Duck.find().then((duck) => {
+					cache.set(table, duck.items)
 					next();
 
 				}, function(err){
@@ -23,7 +27,7 @@ module.exports = function(_duck){
 
 						req.flash('error', 'Opps, something when wrong! Please try again.');
 						res.redirect('/');
-				});
+				});*/
 			}
 		}
 	}

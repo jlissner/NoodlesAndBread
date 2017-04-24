@@ -14,23 +14,29 @@ router.use((req, res, next) => {
 	const site = res.locals.site;
 
 	// TODO: Make this smarter so that I don't have to do this on every page load
-	Page.find('Id', site.Id).items.forEach((page) => {
-		router.get(page.url, (req, res, next) => {
-			const layout = site.layouts && site.layouts.filter((_layout) => _layout.name === page.layout)[0];
+	Page.find({'Id': site.Id}).then((duck) => {
+		duck.items.forEach((page) => {
+			router.get(page.url, (req, res, next) => {
+				const layout = site.layouts && site.layouts.filter((_layout) => _layout.name === page.layout)[0];
 
-			pug.render(layout.pug, res.locals, (err, html) => {
-				res.render(`layout.pug`, {
-					title: page.title,
-					description: page.description,
-					layout: err || html,
-					robots: page.robots,
-					params: req.params,
+				pug.render(layout.pug, res.locals, (err, html) => {
+					res.render(`layout.pug`, {
+						title: page.title,
+						description: page.description,
+						layout: err || html,
+						robots: page.robots,
+						params: req.params,
+					});
 				});
 			});
 		});
-	});
 
-	next();
+		next();
+	}, (err) => {
+		console.error(err);
+
+		next();
+	});
 });
 
 module.exports = router;

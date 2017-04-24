@@ -1,6 +1,6 @@
-/* global jQuery, duck, SimpleMDE, CodeMirror, window */
+/* global jQuery, duck, CodeMirror, window */
 
-void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
+void function initDuckForm($, duck, CodeMirror, window) {
 	'use strict'
 
 	function deleteArrayItem(e) {
@@ -170,7 +170,9 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 				}
 
 				// add the new object to the list of values
-				value.push(buildObjectFunction(newObj, duck.findRelevantChildren($objec, '[duck-field]')));
+				var newObjToPush = buildObjectFunction(newObj, duck.findRelevantChildren($objec, '[duck-field]'));
+				value.push(newObjToPush);
+
 			});
 		} else {
 			$item.find('[duck-value]').each((i, arrayItem) => {
@@ -228,7 +230,9 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 		}
 	}
 
-	function buildObject(obj, $context) {
+	function buildObject(_obj, $context) {
+		const obj = _obj instanceof Array ? _obj[0] : _obj;
+		
 		$context.each((i, item) => {
 			const $item = $(item);
 			const fieldName = $item.attr('duck-field');
@@ -237,11 +241,11 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 			switch(type){
 				case 'object': {
 					parseObject(obj, $item, fieldName, buildObject);
-
 					break;
 				}
 				case 'array': {
 					parseArray(obj, $item, fieldName, buildObject);
+					console.log(2, fieldName, obj, obj[fieldName])
 
 					break;
 				}
@@ -287,6 +291,7 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 			}
 		});
 
+		console.log(3, obj)
 		return obj;
 	}
 
@@ -302,7 +307,7 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 	}
 
 	function updateItem(table, key, keyValue, range, rangeValue, $startOfFields, successCallback, failureCallBack) {
-		duck(table).get({field: key, value: keyValue, findOne: true}, (data) => {
+		duck(table).get({key, value: keyValue}, {key: range, value: rangeValue}, {findOne: true}, (data) => {
 			const item = buildObject(data, $startOfFields);
 			duck(table).update(item, successCallback, failureCallBack);
 		});
@@ -350,6 +355,7 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 	function submitForm(e) {
 		e.preventDefault();
 		e.stopPropagation();
+
 
 		const crud = e.data.crud;
 		const table = e.data.table;
@@ -445,4 +451,4 @@ void function initDuckForm($, duck, SimpleMDE, CodeMirror, window) {
 	}
 
 	$(() => {$('[duck-table]').duckForm();});
-}(jQuery.noConflict(), duck, SimpleMDE, CodeMirror, window)
+}(jQuery.noConflict(), duck, CodeMirror, window)

@@ -144,29 +144,6 @@ module.exports = (_duck) => {
 	// TODO make it work with HASH-RANGE keys
 	_duck.prototype.update = update;
 
-
-	// updates the cache
-	_duck.prototype.updateCache = function(){
-		const table = this.table;
-		const cacheDuration = this.cacheDuration;
-
-		//console.log(`${table} - updating cache`);
-
-		cache.del(table);
-		this.items = null;
-
-		return new Promise(function(resolve, reject){
-			db.lite.scan({TableName: table}, function(err, data){
-				if (err) {
-					console.error(JSON.stringify(err, null, 2));
-
-					reject(err);
-				} else {
-					cache.set(table, data.Items, cacheDuration);
-
-					resolve(data.Items);
-				}
-			});
-		});
-	}
+	//_duck.prototype.find = find;
+	//_duck.prototype.findOne = findOne;
 }

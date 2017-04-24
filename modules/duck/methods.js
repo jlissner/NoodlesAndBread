@@ -2,27 +2,6 @@ const bcrypt = require('bcrypt-nodejs');
 const cache  = require('../cache');
 const joinObject  = require('../joinObject');
 
-function returnItem(obj, field, value, contains) {
-	if (!obj || !field) { return false; }
-	if (!(field instanceof Array)) { field = field.split('.'); }
-
-	const currentField = field.shift();
-	if (field.length) {
-		return returnItem(obj[currentField], field, value, contains);
-	}
-
-	const objValue = obj[currentField];
-	if(objValue instanceof Array) {
-		return objValue.indexOf(value) > -1;
-	}
-
-	if(value instanceof Array) {
-		return value.indexOf(objValue) > -1;
-	}
-
-	return contains ? objValue.indexOf(value) > -1 : objValue === value;
-}
-
 module.exports = function(_duck){
 	_duck.prototype.generateHash  = (password) => { return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null); }; // generateing a hash
 	_duck.prototype.validPassword = (password, encodedPassword) => { return bcrypt.compareSync(password, encodedPassword); }; // checking if password is valid
@@ -65,7 +44,7 @@ module.exports = function(_duck){
 	// value: string = 'Joe'
 	// contains: bool = true (if it isn't contains, it's equals)
 	// return array of items
-	_duck.prototype.find = function(field, value, contains){
+	/*_duck.prototype.find = function(field, value, contains){
 		if(!field){
 			return new _duck(this.schema, this.items || this.cached());
 		}
@@ -102,5 +81,5 @@ module.exports = function(_duck){
 		}
 		
 		return new _duck(this.schema);
-	}
+	}*/
 }

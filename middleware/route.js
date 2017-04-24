@@ -11,7 +11,8 @@ module.exports = (req, res, next) => {
 		next();
 		return;
 	}
-	const layout = site.layouts && site.layouts.filter((_layout) => _layout.name === page.layout)[0];
+
+	const layout = site && site.layouts && site.layouts.filter((_layout) => _layout.name === page.layout)[0];
 
 	pug.render(layout.pug, res.locals, (err, html) => {
 		res.render(`layout.pug`, {

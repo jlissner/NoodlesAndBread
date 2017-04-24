@@ -1,4 +1,4 @@
-/*global jQuery, CodeMirror, SimpleMDE */
+/*global jQuery, CodeMirror */
 void function initSite($, CodeMirror, SimpleMDE){
 	'use strict'
 
@@ -159,4 +159,4 @@ void function initSite($, CodeMirror, SimpleMDE){
 		$('input[type="color"]').spectrum({showInput: true, preferredFormat: "hex"});
 	});	
 	/* eslint-enable */
-}(jQuery.noConflict(), CodeMirror, SimpleMDE);
+}(jQuery.noConflict(), CodeMirror);
